@@ -1,0 +1,27 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "Compares two configuration files and shows a difference.",
+  "main": "./src/index.js",
+  "bin": {
+    "gendiff": "./bin/gendiff.js"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alatr/frontend-project-lvl2.git"
+  },
+  "type": "module",
+  "author": "Dmitriy Lukianov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alatr/frontend-project-lvl2/issues"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "homepage": "https://github.com/Alatr/frontend-project-lvl2#readme",
+  "devDependencies": {
+    "commander": "^6.2.1"
+  }
+}
