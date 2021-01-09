@@ -3,33 +3,9 @@ import fs from 'fs';
 import process from 'process';
 import path from 'path';
 import _ from 'lodash';
+// gendiff src/data/file1.json src/data/file2.json
 
-export default () => {
-
-  const program = new Command();
-  
-  program
-  .version('0.1.0')
-  .description('Compares two configuration files and shows a difference.')
-  .option('-f, --format [type]', 'output format')
-  ;
-
-  program
-  .arguments('<filepath1> <filepath2>')
-  .action(function (filepath1, filepath2) {
-    const jsonContent1 = fs.readFileSync(path.resolve(process.cwd(), filepath1), 'utf-8');
-    const jsonContent2 = fs.readFileSync(path.resolve(process.cwd(), filepath2), 'utf-8');
-    
-    const resultCompare = compareTwoFile(jsonContent1, jsonContent2);
-
-    console.log(resultCompare);
-  });
-  
-  program.parse(process.argv);
-}
-
-
-function compareTwoFile(file1, file2) {
+export const compareTwoFile = (file1, file2) => {
   let result = '';
   const data1 = JSON.parse(file1);
   const data2 = JSON.parse(file2);
@@ -39,7 +15,7 @@ function compareTwoFile(file1, file2) {
 
   const keys = _.union(keys1, keys2).sort();
 
-  for (const key of keys) {
+  keys.forEach((key) => {
     if (!_.has(data1, key)) {
       result += ` + ${key}: ${data2[key]}\n`;
     } else if (!_.has(data2, key)) {
@@ -50,7 +26,28 @@ function compareTwoFile(file1, file2) {
     } else {
       result += `   ${key}: ${data2[key]}\n`;
     }
-  }
+  });
 
   return `{\n${result}}`;
-}
+};
+
+export const gendiff = () => {
+  const program = new Command();
+
+  program
+    .version('0.1.0')
+    .description('Compares two configuration files and shows a difference.')
+    .option('-f, --format [type]', 'output format');
+  program
+    .arguments('<filepath1> <filepath2>')
+    .action((filepath1, filepath2) => {
+      const file1Content = fs.readFileSync(path.resolve(process.cwd(), filepath1), 'utf-8');
+      const file2Content = fs.readFileSync(path.resolve(process.cwd(), filepath2), 'utf-8');
+
+      const resultCompare = compareTwoFile(file1Content, file2Content);
+
+      console.log(resultCompare);
+    });
+
+  program.parse(process.argv);
+};

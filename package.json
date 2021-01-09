@@ -6,23 +6,39 @@
   "bin": {
     "gendiff": "./bin/gendiff.js"
   },
-  "scripts": {},
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "test": "npx jest"
+  },
+  "type": "module",
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Alatr/frontend-project-lvl2.git"
   },
-  "type": "module",
   "author": "Dmitriy Lukianov",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Alatr/frontend-project-lvl2/issues"
   },
-  "engines": {
-    "node": ">=14"
-  },
   "homepage": "https://github.com/Alatr/frontend-project-lvl2#readme",
-  "devDependencies": {
+  "dependencies": {
+    "debug": "^4.2.0",
     "commander": "^6.2.1",
     "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "@jest/globals": "^26.6.2",
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.0",
+    "jest": "^26.6.3",
+    "jest-cli": "^26.6.3"
   }
 }
