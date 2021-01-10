@@ -2,34 +2,14 @@ import { Command } from 'commander';
 import fs from 'fs';
 import process from 'process';
 import path from 'path';
-import _ from 'lodash';
-// gendiff src/data/file1.json src/data/file2.json
+import { compareTwoFile } from './parsers.js';
 
-export const compareTwoFile = (file1, file2) => {
-  let result = '';
-  const data1 = JSON.parse(file1);
-  const data2 = JSON.parse(file2);
+// gendiff src/__fixtures__/file1.json src/__fixtures__/file2.json
 
-  const keys1 = _.keys(data1);
-  const keys2 = _.keys(data2);
+const getExtension = (filepath) => path.extname(filepath);
 
-  const keys = _.union(keys1, keys2).sort();
+const getExtension = (filepath) => path.extname(filepath);
 
-  keys.forEach((key) => {
-    if (!_.has(data1, key)) {
-      result += ` + ${key}: ${data2[key]}\n`;
-    } else if (!_.has(data2, key)) {
-      result += ` - ${key}: ${data1[key]}\n`;
-    } else if (data1[key] !== data2[key]) {
-      result += ` - ${key}: ${data1[key]}\n`;
-      result += ` + ${key}: ${data2[key]}\n`;
-    } else {
-      result += `   ${key}: ${data2[key]}\n`;
-    }
-  });
-
-  return `{\n${result}}`;
-};
 
 export const gendiff = () => {
   const program = new Command();
@@ -41,6 +21,8 @@ export const gendiff = () => {
   program
     .arguments('<filepath1> <filepath2>')
     .action((filepath1, filepath2) => {
+      console.log(getExtension(path.resolve(process.cwd(), filepath1)));
+
       const file1Content = fs.readFileSync(path.resolve(process.cwd(), filepath1), 'utf-8');
       const file2Content = fs.readFileSync(path.resolve(process.cwd(), filepath2), 'utf-8');
 
@@ -51,3 +33,4 @@ export const gendiff = () => {
 
   program.parse(process.argv);
 };
+
