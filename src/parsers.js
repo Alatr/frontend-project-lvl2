@@ -1,4 +1,7 @@
 import _ from 'lodash';
+import fs from 'fs';
+import path from 'path';
+import yaml from 'js-yaml';
 
 // const yaml = require('js-yaml');
 // const fs   = require('fs');
@@ -10,28 +13,42 @@ import _ from 'lodash';
 // } catch (e) {
 //   console.log(e);
 // }
+export const parseFile = (pathFile) => {
+  const extension = path.extname(pathFile);
+  const fileContent = fs.readFileSync(pathFile, 'utf-8');
+  switch (extension) {
+    case '.json':
+      return JSON.parse(fileContent);
+      break;
+    case '.yml':
+      console.log(yaml.load(fileContent));
+      return yaml.load(fileContent);
+      break;
 
+    default:
+      throw new Error(`Unknown extension ${extension}`);
+      break;
+  }
+};
 
 export const compareTwoFile = (file1, file2) => {
   let result = '';
-  const data1 = JSON.parse(file1);
-  const data2 = JSON.parse(file2);
 
-  const keys1 = _.keys(data1);
-  const keys2 = _.keys(data2);
+  const keys1 = _.keys(file1);
+  const keys2 = _.keys(file2);
 
   const keys = _.union(keys1, keys2).sort();
 
   keys.forEach((key) => {
-    if (!_.has(data1, key)) {
-      result += ` + ${key}: ${data2[key]}\n`;
-    } else if (!_.has(data2, key)) {
-      result += ` - ${key}: ${data1[key]}\n`;
-    } else if (data1[key] !== data2[key]) {
-      result += ` - ${key}: ${data1[key]}\n`;
-      result += ` + ${key}: ${data2[key]}\n`;
+    if (!_.has(file1, key)) {
+      result += ` + ${key}: ${file2[key]}\n`;
+    } else if (!_.has(file2, key)) {
+      result += ` - ${key}: ${file1[key]}\n`;
+    } else if (file1[key] !== file2[key]) {
+      result += ` - ${key}: ${file1[key]}\n`;
+      result += ` + ${key}: ${file2[key]}\n`;
     } else {
-      result += `   ${key}: ${data2[key]}\n`;
+      result += `   ${key}: ${file2[key]}\n`;
     }
   });
 

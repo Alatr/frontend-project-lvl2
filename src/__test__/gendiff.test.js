@@ -4,8 +4,6 @@ import { compareTwoFile } from '../index.js';
 import { readFile } from './pathes.js';
 import resultFile1File2 from '../__fixtures__/resultFile1File2.js';
 
-
-
 let yml1;
 let yml2;
 let json1;
@@ -23,14 +21,14 @@ beforeEach(() => {
 });
 
 describe('gendiff', () => {
-  test('check main flow with jsom', () => {
+  test('check main flow with json', () => {
     expect(compareTwoFile(json1, json2)).toBe(resultFile1File2());
     expect(json1Copy).toEqual(json1);
     expect(json2Copy).toEqual(json2);
   });
   //
-  test('check main flow with jsom', () => {
-    expect(compareTwoFile(json1, json2)).toBe(resultFile1File2());
+  test('check main flow with yml', () => {
+    expect(compareTwoFile(yml1, yml2)).toBe(resultFile1File2());
   });
   test('empty args', () => {
     const resultCompare = '{\n}';
