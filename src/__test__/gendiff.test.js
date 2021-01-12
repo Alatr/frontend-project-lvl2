@@ -1,7 +1,9 @@
 import { test, expect } from '@jest/globals';
 import _ from 'lodash';
 import { compareTwoFile } from '../index.js';
-import { readFile } from './pathes.js';
+import { getFixturePath } from './pathes.js';
+import { parseFile } from '../parsers.js';
+
 import resultFile1File2 from '../__fixtures__/resultFile1File2.js';
 
 let yml1;
@@ -12,10 +14,10 @@ let json2;
 let json2Copy;
 
 beforeEach(() => {
-  yml1 = readFile('file1.yml');
-  yml2 = readFile('file2.yml');
-  json1 = readFile('file1.json');
-  json2 = readFile('file2.json');
+  yml1 = parseFile(getFixturePath('file1.yml'));
+  yml2 = parseFile(getFixturePath('file2.yml'));
+  json1 = parseFile(getFixturePath('file1.json'));
+  json2 = parseFile(getFixturePath('file2.json'));
   json1Copy = _.cloneDeep(json1);
   json2Copy = _.cloneDeep(json2);
 });
@@ -31,7 +33,6 @@ describe('gendiff', () => {
     expect(compareTwoFile(yml1, yml2)).toBe(resultFile1File2());
   });
   test('empty args', () => {
-    const resultCompare = '{\n}';
-    expect(compareTwoFile('{}', '{}')).toBe(resultCompare);
+    expect(compareTwoFile({}, {})).toBe('{\n}');
   });
 });
