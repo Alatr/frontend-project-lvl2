@@ -24,6 +24,10 @@ const getLabelStausChange = (key, obj1, obj2) => {
   if(predicates.isUnchanged(key, obj1, obj2)) return ' ';
 }
 
+// const printResult = (key, obj, indent, state) => `${indent}${indent}  ${state} ${key}: ${(_.isPlainObject(obj[key])) ? JSON.stringify(obj[key], undefined, 2) : obj[key]}\n`;
+const printResult = (key, obj, indent, state) => `${indent}  ${state} ${key}: ${obj[key]}\n`;
+
+
 export const compareTwoFile = (file11, file22) => {
   let result = '';
 
@@ -37,36 +41,42 @@ export const compareTwoFile = (file11, file22) => {
     const depthIndent = '  '.repeat(treeDepth)
 
     keys.forEach((key) => {
-      if (_.isPlainObject(file1[key]) || _.isPlainObject(file2[key])) {
+      if (_.isPlainObject(file1[key]) && _.isPlainObject(file2[key])) {
         const labelStausChange = getLabelStausChange(key, file1, file2);
-        let res = '  + 000'
-        console.log(iter(file1[key], file2[key], acc, treeDepth + 1));
-        // let res = iter(file1[key], file2[key], acc, treeDepth + 1)
-        return acc +=
-        `${depthIndent}${labelStausChange} ${key}: {\n${depthIndent}${res}\n${depthIndent}}\n`;
-          // ${'  '.repeat(iterCount + 1)}${iter(file1[key], file2[key], acc, iterCount + 1)}
-          // ${'  '.repeat(iterCount)}}
-
+        // let res = treeDepth + 1
+        
+        // console.log(treeDepth, '@');
+        let res = iter(file1[key], file2[key], '', treeDepth + 1);
+        return acc += `${depthIndent}${labelStausChange} ${key}: {\n${depthIndent}${res}\n${depthIndent}}\n`;
+        
       }
       else if (predicates.isAdded(key, file1)) {
-        acc += ` + ${key}: ${(_.isPlainObject(file2[key])) ? JSON.stringify(file2[key]) : file2[key]}\n`;
-        // return acc;
+        // acc += `${depthIndent}  + ${key}: ${(_.isPlainObject(file2[key])) ? JSON.stringify(file2[key], undefined, 2) : file2[key]}\n`;
+        acc += printResult(key, file2, depthIndent, '+');
+
       } else if (predicates.isDeleted(key, file2)) {
-        acc += ` - ${key}: ${(_.isPlainObject(file1[key])) ? JSON.stringify(file1[key]) : file1[key]}\n`;
-        // return acc;
-      } else if (predicates.isUnchanged(key, file1, file2)) {
-        acc += ` - ${key}: ${(_.isPlainObject(file1[key])) ? JSON.stringify(file1[key]) : file1[key]}\n`;
-        acc += ` + ${key}: ${(_.isPlainObject(file2[key])) ? JSON.stringify(file2[key]) : file2[key]}\n`;
-        // return acc;
+        // acc += `${depthIndent}  - ${key}: ${(_.isPlainObject(file1[key])) ? JSON.stringify(file1[key], undefined, 2) : file1[key]}\n`;
+        // acc += printResult(key, file1, depthIndent, '-');
+
+
+      } else if (predicates.isChanged(key, file1, file2)) {
+        // acc += `${depthIndent}  - ${key}: ${(_.isPlainObject(file1[key])) ? JSON.stringify(file1[key], undefined, 2) : file1[key]}\n`;
+        // acc += `${depthIndent}  + ${key}: ${(_.isPlainObject(file2[key])) ? JSON.stringify(file2[key], undefined, 2) : file2[key]}\n`;
+        acc += printResult(key, file1, depthIndent, '-');
+        acc += printResult(key, file2, depthIndent, '+');
+        
+
       } else {
-        acc += `   ${key}: ${(_.isPlainObject(file2[key])) ? JSON.stringify(file2[key]) : file2[key]}\n`;
-        // return acc;
+        // acc += `${depthIndent}    ${key}: ${(_.isPlainObject(file2[key])) ? JSON.stringify(file2[key], undefined, 2) : file2[key]}\n`;
+        acc += printResult(key, file2, depthIndent, ' ');
+
+
       }
       
     });
     return acc;
   }
-  console.log(`{\n${iter(file11, file22, '', 1)}}`);
+  console.log(`{\n${iter(file11, file22, '', 0)}}`);
   
   return `{\n${result}}`;
 };
