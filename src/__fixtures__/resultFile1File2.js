@@ -12,12 +12,12 @@ export default () => '{\n - follow: false\n   host: hexlet.io\n - proxy: 123.234
         key5: value5
     }
     setting6: {
-        doge: {
-          - wow: 
-          + wow: so much
-        }
-        key: value
-      + ops: vops
+      doge: {
+        - wow: 
+        + wow: so much
+      }
+      key: value
+    + ops: vops
     }
   }
   group1: {
