@@ -9,6 +9,8 @@ import { parseFile } from './parsers.js';
 // const getExtension = (filepath) => path.extname(filepath);
 
 // const getExtension = (filepath) => path.extname(filepath);
+const indentSize = '  ';
+
 
 const predicates = {
   isDeleted: (key, obj) => !_.has(obj, key),
@@ -24,7 +26,7 @@ const getLabelStausChange = (key, obj1, obj2) => {
   if(predicates.isUnchanged(key, obj1, obj2)) return ' ';
 }
 
-const printResult = (key, obj, indent, state) => `${indent}  ${state} ${key}: ${(_.isPlainObject(obj[key])) ? stringifyJSON(obj[key], indent) : obj[key]}`;
+const printResult = (key, obj, indent, state) => `${indent}${state} ${key}: ${(_.isPlainObject(obj[key])) ? stringifyJSON(obj[key], indent) : obj[key]}`;
 
 
 
@@ -36,20 +38,23 @@ const printResult = (key, obj, indent, state) => `${indent}  ${state} ${key}: ${
 
 const stringifyJSON = (obj, indent) => {
   const iter = (obj, acc, treeDepth) => {
-    const depthIndent = indent.repeat(treeDepth)
-    const keys = _.keys(obj).sort();
+    const depthIndent = indent.repeat(treeDepth);
+
+    const keys = _.keys(obj);
+    console.log(indent.length, depthIndent.length);
     const lastKey = _.last(keys);
     keys.forEach((key) => {
       const lastIndent = (lastKey === key) ? '' : '\n';
       if (_.isPlainObject(obj[key])) {
         let res = iter(obj[key], ``, treeDepth + 1);
-        return acc += `  ${depthIndent}${key}: {\n${res}\n${depthIndent}  }${lastIndent}`;
+        return acc += `  ${indent}${indentSize}  ${key}: {\n${res}\n${depthIndent}#}${lastIndent}`;
       }
-      return acc += `  ${depthIndent}${key}: ${obj[key]}${lastIndent}`;
+      return acc += `  ${indent}${indentSize}  ${key}: ${obj[key]}${lastIndent}`;
+
     });
     return acc;
   }
-  return `{\n${iter(obj, ``, 2)}\n${indent}  }`;
+  return `{\n${iter(obj, ``, 1)}\n${indent}  }`;
 }
 
 
@@ -74,15 +79,15 @@ export const compareTwoFile = (file11, file22) => {
     const keys = _.union(keys1, keys2).sort();
     const lastKey = _.last(keys);
 
-    const depthIndent = '  '.repeat(treeDepth)
+    const depthIndent = indentSize.repeat(treeDepth)
 
     keys.forEach((key) => {
       const lastIndent = (lastKey === key) ? '' : '\n';
       
       if (_.isPlainObject(file1[key]) && _.isPlainObject(file2[key])) {
-        const labelStausChange = getLabelStausChange(key, file1, file2);
-        let res = iter(file1[key], file2[key], '', treeDepth + 1);
-        return acc += `${depthIndent}${labelStausChange} ${key}: {\n${res}\n${depthIndent} }${lastIndent}`;
+        // const labelStausChange = getLabelStausChange(key, file1, file2);
+        // let res = iter(file1[key], file2[key], '', treeDepth + 1);
+        // return acc += `${depthIndent}${labelStausChange} ${key}: {\n${res}\n${depthIndent}  }${lastIndent}`;
         
       }
       else if (predicates.isAdded(key, file1)) {
@@ -115,6 +120,22 @@ export const compareTwoFile = (file11, file22) => {
   
   return `{\n${result}}`;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const gendiff = () => {
   const program = new Command();
