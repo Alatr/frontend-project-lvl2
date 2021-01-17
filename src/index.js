@@ -38,18 +38,22 @@ const printResult = (key, obj, indent, state) => `${indent}${state} ${key}: ${(_
 
 const stringifyJSON = (obj, indent) => {
   const iter = (obj, acc, treeDepth) => {
-    const depthIndent = indent.repeat(treeDepth);
-
+    const depthIndent = '    '.repeat(treeDepth);
+    
     const keys = _.keys(obj);
-    console.log(indent.length, depthIndent.length);
     const lastKey = _.last(keys);
     keys.forEach((key) => {
       const lastIndent = (lastKey === key) ? '' : '\n';
+      // console.log(indent.length, depthIndent.length);
       if (_.isPlainObject(obj[key])) {
+        
+        // console.log(indent.length, depthIndent.length, '#', key);
+        // console.log(obj[key], treeDepth, depthIndent.length);
         let res = iter(obj[key], ``, treeDepth + 1);
-        return acc += `  ${indent}${indentSize}  ${key}: {\n${res}\n${depthIndent}#}${lastIndent}`;
+        return acc += `${indent}${depthIndent}  ${key}: {\n${res}\n${indent}${depthIndent} }${lastIndent}`;
       }
-      return acc += `  ${indent}${indentSize}  ${key}: ${obj[key]}${lastIndent}`;
+      // console.log(indent.length, depthIndent.length, '#', key);
+      return acc += `${indent}${depthIndent}  ${key}: ${obj[key]}${lastIndent}`;
 
     });
     return acc;
@@ -85,31 +89,42 @@ export const compareTwoFile = (file11, file22) => {
       const lastIndent = (lastKey === key) ? '' : '\n';
       
       if (_.isPlainObject(file1[key]) && _.isPlainObject(file2[key])) {
-        // const labelStausChange = getLabelStausChange(key, file1, file2);
-        // let res = iter(file1[key], file2[key], '', treeDepth + 1);
-        // return acc += `${depthIndent}${labelStausChange} ${key}: {\n${res}\n${depthIndent}  }${lastIndent}`;
+        const labelStausChange = getLabelStausChange(key, file1, file2);
+        let res = iter(file1[key], file2[key], '', treeDepth + 1);
+
+        // if()
+
+        acc += `${depthIndent.length}${depthIndent} ${labelStausChange}${key}: {\n${res}\n${depthIndent}  }${lastIndent}`;
+        return acc;
         
       }
       else if (predicates.isAdded(key, file1)) {
         // acc += `${depthIndent}  + ${key}: ${(_.isPlainObject(file2[key])) ? JSON.stringify(file2[key], undefined, 2) : file2[key]}\n`;
-        acc += printResult(key, file2, depthIndent, '+');
-
+        // acc += printResult(key, file2, depthIndent, '+');
+        acc += `  ${depthIndent}+ ${key}: ${file2[key]}`;
+        
       } else if (predicates.isDeleted(key, file2)) {
         // acc += `${depthIndent}  - ${key}: ${(_.isPlainObject(file1[key])) ? JSON.stringify(file1[key], undefined, 2) : file1[key]}\n`;
-        acc += printResult(key, file1, depthIndent, '-');
-
-
+        // acc += printResult(key, file1, depthIndent, '-');
+        acc += `  ${depthIndent}- ${key}: ${file1[key]}`;
+        
+        
       } else if (predicates.isChanged(key, file1, file2)) {
         // acc += `${depthIndent}  - ${key}: ${(_.isPlainObject(file1[key])) ? JSON.stringify(file1[key], undefined, 2) : file1[key]}\n`;
         // acc += `${depthIndent}  + ${key}: ${(_.isPlainObject(file2[key])) ? JSON.stringify(file2[key], undefined, 2) : file2[key]}\n`;
-        acc += printResult(key, file1, depthIndent, '-');
-        acc += '\n';
-        acc += printResult(key, file2, depthIndent, '+');
         
-
+        acc += `  ${depthIndent}- ${key}: ${file1[key]}`;
+        // acc += printResult(key, file1, depthIndent, '-');
+        acc += '\n';
+        acc += `  ${depthIndent}+ ${key}: ${file2[key]}`;
+        
+        // acc += printResult(key, file2, depthIndent, '+');
+        
+        
       } else {
         // acc += `${depthIndent}    ${key}: ${(_.isPlainObject(file2[key])) ? JSON.stringify(file2[key], undefined, 2) : file2[key]}\n`;
-        acc += printResult(key, file2, depthIndent, ' ');
+        acc += `  ${depthIndent}  ${key}: ${file2[key]}`;
+        // acc += printResult(key, file2, depthIndent, ' ');
 
       }
       if (lastKey !== key) acc += '\n';
