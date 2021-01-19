@@ -3,15 +3,20 @@ import _ from 'lodash';
 import process from 'process';
 import path from 'path';
 import { parseFile } from './parsers.js';
-import { addMessage, deleteMessage, changeMessage, unchangeMessage } from './formatters/stylish.js';
+import getFormat from './formatters/index.js';
 
 // gendiff src/__fixtures__/file1.json src/__fixtures__/file2.json
 
 const predicates = {
   isDeleted: (key, obj) => !_.has(obj, key),
   isAdded: (key, obj) => !_.has(obj, key),
-  isUnchanged: (key, obj1, obj2) => obj1[key] === obj2[key],
+  isUnchanged: (key, obj1, obj2) => _.has(obj1, key) !== _.has(obj2, key),
+  // isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
+  // isChanged: (key, obj1, obj2) => _.has(obj1, key) === _.has(obj2, key),
   isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
+
+    // isUnchanged: (key, obj1, obj2) => obj1[key] === obj2[key],
+    // isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
 };
 
 const getLabelStausChange = (key, obj1, obj2) => {
@@ -45,29 +50,7 @@ const getLabelStausChange = (key, obj1, obj2) => {
 //   return `{\n${iter(obj, '', 1)}\n${indent}  }`;
 // };
 
-const stringifyJSON = (value, replacer = '  ', spacesCount = 1, prevDepth = '') => {
 
-  const iter = (currentValue, depth) => {
-    if (!_.isPlainObject(currentValue)) {
-      return currentValue.toString();
-    }
-
-    const indentSize = depth * spacesCount;
-    const currentIndent = replacer.repeat(indentSize);
-    const bracketIndent = replacer.repeat(indentSize - spacesCount);
-    const lines = Object
-      .entries(currentValue)
-      .map(([key, val]) => `${prevDepth}${currentIndent}${key}: ${iter(val, depth + 1)}`);
-
-    return [
-      '{',
-      ...lines,
-      `${bracketIndent}}`,
-    ].join('\n');
-  };
-
-  return iter(value, 1);
-};
 
 /* 
   * addMessage
@@ -119,7 +102,7 @@ const stringifyJSON = (value, replacer = '  ', spacesCount = 1, prevDepth = '') 
 
 //   return `{\n${iter(file11, file22, '', 0)}\n}`;
 // };
-export const compareTwoFile = (filePath1, filePath2) => {
+export const compareTwoFile = (filePath1, filePath2, format) => {
   const file1Content = parseFile(path.resolve(process.cwd(), filePath1));
   const file2Content = parseFile(path.resolve(process.cwd(), filePath2));
   // const file1Content = {
@@ -148,34 +131,42 @@ export const compareTwoFile = (filePath1, filePath2) => {
 
   const iter = (object1, object2, depth) => {
     const keys = _.union(_.keys(object1), _.keys(object2)).sort();
-    let lines = [];
     const replacer = '  ';
     const spacesCount = 1;
     const indentSize = depth * spacesCount;
     const currentIndent = replacer.repeat(indentSize);
     const bracketIndent = replacer.repeat(indentSize - spacesCount);
 
-    
-    keys.forEach((key) => {
+
+    let lines = keys.map((key) => {
       /*  */
-      if (_.has(object2, key) && _.has(object1, key) && !_.isPlainObject(object1[key]) && !_.isPlainObject(object2[key])) {
+      if (!_.isPlainObject(object1[key]) && !_.isPlainObject(object2[key])) {
         if (predicates.isAdded(key, object1)) {
-          lines.push(addMessage(key, object1, object2, currentIndent));
-
-        } else if (predicates.isDeleted(key, object2)) {
-          lines.push(deleteMessage(key, object1, object2, currentIndent));
-
-        } else if (predicates.isChanged(key, object1, object2)) {
-          lines.push(changeMessage(key, object1, object2, currentIndent));
-
-        } else {
-          lines.push(unchangeMessage(key, object1, object2, currentIndent));
+          return format.addMessage(key, object1, object2, currentIndent);
         }
-        return lines;
+        if (predicates.isDeleted(key, object2)) {
+          return format.deleteMessage(key, object1, object2, currentIndent);
+        }
+        if (predicates.isChanged(key, object1, object2)) {
+          return format.changeMessage(key, object1, object2, currentIndent);
+        }
+        return format.unchangeMessage(key, object1, object2, currentIndent);
       }
       /*  */
-      console.log(object2,object1,[key]);
-      lines.push(`${currentIndent}${key}: ${iter(object1[key], object2[key], depth + 1)}`);
+
+    if (predicates.isAdded(key, object1)) {
+      return format.addMessage(key, object1, object2, currentIndent);
+
+    }
+    if (predicates.isDeleted(key, object2)) {
+      return format.deleteMessage(key, object1, object2, currentIndent);
+
+    }
+    if ( !_.isPlainObject(object1[key]) || !_.isPlainObject(object2[key])) {
+        return format.changeMessage(key, object1, object2, currentIndent);
+    }
+
+      return `${currentIndent}${key}: ${iter(object1[key], object2[key], depth + 1)}`;
     });
 
 
@@ -205,8 +196,8 @@ export const gendiff = () => {
   program
     .arguments('<filepath1> <filepath2>')
     .action((filepath1, filepath2) => {
-
-      const resultCompare = compareTwoFile(filepath1, filepath2, program.format);
+      const format = getFormat(program.format)
+      const resultCompare = compareTwoFile(filepath1, filepath2, format);
 
       console.log(resultCompare);
     });
