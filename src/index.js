@@ -19,13 +19,7 @@ const predicates = {
     // isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
 };
 
-const getLabelStausChange = (key, obj1, obj2) => {
-  if (predicates.isAdded(key, obj1)) return '+';
-  if (predicates.isDeleted(key, obj2)) return '-';
-  if (predicates.isChanged(key, obj1, obj2)) return ' ';
-  if (predicates.isUnchanged(key, obj1, obj2)) return ' ';
-  return null;
-};
+
 
 // const stringifyJSON = (obj, indent) => {
 //   const iter = (object, acc, treeDepth) => {
@@ -52,13 +46,7 @@ const getLabelStausChange = (key, obj1, obj2) => {
 
 
 
-/* 
-  * addMessage
-  * deleteMessage
-  * changeMessage
-  * unchangeMessage
-  * addMessage
- */
+
 
 // export const compareTwoFile = (file11, file22) => {
 //   const iter = (file1, file2, acc, treeDepth) => {
@@ -142,31 +130,32 @@ export const compareTwoFile = (filePath1, filePath2, format) => {
       /*  */
       if (!_.isPlainObject(object1[key]) && !_.isPlainObject(object2[key])) {
         if (predicates.isAdded(key, object1)) {
-          return format.addMessage(key, object1, object2, currentIndent);
+          return format.addMessage(key, object1, object2, depth);
         }
         if (predicates.isDeleted(key, object2)) {
-          return format.deleteMessage(key, object1, object2, currentIndent);
+          return format.deleteMessage(key, object1, object2, depth);
         }
         if (predicates.isChanged(key, object1, object2)) {
-          return format.changeMessage(key, object1, object2, currentIndent);
+          return format.changeMessage(key, object1, object2, depth);
         }
-        return format.unchangeMessage(key, object1, object2, currentIndent);
+        return format.unchangeMessage(key, object2[key], depth);
       }
       /*  */
 
     if (predicates.isAdded(key, object1)) {
-      return format.addMessage(key, object1, object2, currentIndent);
+      return format.addMessage(key, object1, object2, depth);
 
     }
     if (predicates.isDeleted(key, object2)) {
-      return format.deleteMessage(key, object1, object2, currentIndent);
+      return format.deleteMessage(key, object1, object2, depth);
 
     }
     if ( !_.isPlainObject(object1[key]) || !_.isPlainObject(object2[key])) {
-        return format.changeMessage(key, object1, object2, currentIndent);
-    }
-
-      return `${currentIndent}${key}: ${iter(object1[key], object2[key], depth + 1)}`;
+        return format.changeMessage(key, object1, object2, depth);
+      }
+      
+      return format.unchangeMessage(key, iter(object1[key], object2[key], depth + 1), depth);
+      // return `${currentIndent}${key}: ${}`;
     });
 
 
