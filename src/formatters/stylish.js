@@ -3,31 +3,43 @@ import _ from 'lodash';
 const replacer = '  ';
 const spacesCount = 1;
 
-export const addMessage = (key, obj1, obj2, depth) => {
-  const indent = replacer.repeat((depth !== 1) ? depth+1 : 1 * spacesCount);
+export const addKeyMessage = (key, obj1, obj2, depth) => {
+  const indent = replacer.repeat(depth);
 
   return `${indent}+ ${key}: ${_.isPlainObject(obj2[key]) ? stringifyJSON(obj2[key], indent) : obj2[key]}`;
 }
 /*  */
 /*  */
-export const deleteMessage = (key, obj1, obj2, depth) => {
-  const indent = replacer.repeat((depth !== 1) ? depth+1 : 1 * spacesCount);
+export const deleteKeyMessage = (key, obj1, obj2, depth) => {
+  const indent = replacer.repeat(depth);
   return `${indent}- ${key}: ${_.isPlainObject(obj1[key]) ? stringifyJSON(obj1[key], indent) : obj1[key]}`;
 } 
 /*  */
 /*  */
-export const unchangeMessage = (key, val, depth) => {
-  const indent = replacer.repeat((depth !== 1) ? depth+1 : 1 * spacesCount);
+export const unchangeKeyMessage = (key, val, depth) => {
+  const indent = replacer.repeat(depth);
   
   return `${indent}  ${key}: ${val}`;
 }
 /*  */
 /*  */
-export const changeMessage = (key, obj1, obj2, indent) => [deleteMessage(key, obj1, obj2, indent), addMessage(key, obj1, obj2, indent)]
+export const changeKeyMessage = (key, obj1, obj2, indent) => [deleteKeyMessage(key, obj1, obj2, indent), addKeyMessage(key, obj1, obj2, indent)]
 /*  */
 /*  */
 
+/*  */
+export const printResultMessage = (lines, depth) => {
 
+    const indentSize = depth * spacesCount;
+    const bracketIndent = replacer.repeat(depth);
+
+    return [
+      '{',
+      ...lines,
+      `${depth}${bracketIndent}}`,
+    ].join('\n');
+}
+/*  */
 const stringifyJSON = (value, prevDepth = '', replacer = '  ', spacesCount = 2) => {
 
   const iter = (currentValue, depth) => {

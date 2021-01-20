@@ -14,6 +14,7 @@ const predicates = {
   // isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
   // isChanged: (key, obj1, obj2) => _.has(obj1, key) === _.has(obj2, key),
   isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
+  isBothIsNotOdject: (key, obj1, obj2) => !_.isPlainObject(obj1[key]) && !_.isPlainObject(obj2[key]),
 
     // isUnchanged: (key, obj1, obj2) => obj1[key] === obj2[key],
     // isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
@@ -46,7 +47,13 @@ const predicates = {
 
 
 
-
+/* 
+  * addKeyMessage
+  * deleteKeyMessage
+  * changeKeyMessage
+  * unchangeKeyMessage
+  * addKeyMessage
+ */
 
 // export const compareTwoFile = (file11, file22) => {
 //   const iter = (file1, file2, acc, treeDepth) => {
@@ -128,34 +135,33 @@ export const compareTwoFile = (filePath1, filePath2, format) => {
 
     let lines = keys.map((key) => {
       /*  */
-      if (!_.isPlainObject(object1[key]) && !_.isPlainObject(object2[key])) {
+      if (predicates.isBothIsNotOdject(key, object1, object2)) {
         if (predicates.isAdded(key, object1)) {
-          return format.addMessage(key, object1, object2, depth);
+          return format.addKeyMessage(key, object1, object2, depth);
         }
         if (predicates.isDeleted(key, object2)) {
-          return format.deleteMessage(key, object1, object2, depth);
+          return format.deleteKeyMessage(key, object1, object2, depth);
         }
         if (predicates.isChanged(key, object1, object2)) {
-          return format.changeMessage(key, object1, object2, depth);
+          return format.changeKeyMessage(key, object1, object2, depth);
         }
-        return format.unchangeMessage(key, object2[key], depth);
+        return format.unchangeKeyMessage(key, object2[key], depth);
       }
       /*  */
 
-    if (predicates.isAdded(key, object1)) {
-      return format.addMessage(key, object1, object2, depth);
+      if (predicates.isAdded(key, object1)) {
+        return format.addKeyMessage(key, object1, object2, depth);
 
-    }
-    if (predicates.isDeleted(key, object2)) {
-      return format.deleteMessage(key, object1, object2, depth);
-
-    }
-    if ( !_.isPlainObject(object1[key]) || !_.isPlainObject(object2[key])) {
-        return format.changeMessage(key, object1, object2, depth);
       }
-      
-      return format.unchangeMessage(key, iter(object1[key], object2[key], depth + 1), depth);
-      // return `${currentIndent}${key}: ${}`;
+      if (predicates.isDeleted(key, object2)) {
+        return format.deleteKeyMessage(key, object1, object2, depth);
+
+      }
+      if ( !_.isPlainObject(object1[key]) || !_.isPlainObject(object2[key])) {
+          return format.changeKeyMessage(key, object1, object2, depth);
+      }
+
+      return format.unchangeKeyMessage(key, iter(object1[key], object2[key], depth + 1), depth);
     });
 
 
@@ -163,6 +169,8 @@ export const compareTwoFile = (filePath1, filePath2, format) => {
     const flatenLines = lines.flatMap((line) => line);
 
     
+    return format.printResultMessage(flatenLines, depth);
+
     return [
       '{',
       ...flatenLines,
