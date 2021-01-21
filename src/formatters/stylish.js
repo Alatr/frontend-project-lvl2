@@ -4,6 +4,8 @@ const replacer = '  ';
 const spacesCount = 1;
 
 export const addKeyMessage = (key, obj1, obj2, depth) => {
+  // const newDepth = (_.isPlainObject(obj2[key])) ? depth + 1  : depth;
+  
   const indent = replacer.repeat(depth);
 
   return `${indent}+ ${key}: ${_.isPlainObject(obj2[key]) ? stringifyJSON(obj2[key], indent) : obj2[key]}`;
@@ -11,13 +13,16 @@ export const addKeyMessage = (key, obj1, obj2, depth) => {
 /*  */
 /*  */
 export const deleteKeyMessage = (key, obj1, obj2, depth) => {
+  // const newDepth = (!_.isPlainObject(obj1[key])) ? depth + 1 : depth;
+
   const indent = replacer.repeat(depth);
   return `${indent}- ${key}: ${_.isPlainObject(obj1[key]) ? stringifyJSON(obj1[key], indent) : obj1[key]}`;
 } 
 /*  */
 /*  */
 export const unchangeKeyMessage = (key, val, depth) => {
-  const indent = replacer.repeat(depth);
+  const newDepth = depth;
+  const indent = replacer.repeat(newDepth);
   
   return `${indent}  ${key}: ${val}`;
 }
@@ -29,22 +34,22 @@ export const changeKeyMessage = (key, obj1, obj2, indent) => [deleteKeyMessage(k
 
 /*  */
 export const printResultMessage = (lines, depth) => {
-
-    const indentSize = depth * spacesCount;
-    const bracketIndent = replacer.repeat(depth);
+  const newDepth = (depth === 1) ? 0 : depth;
+    // const indentSize = newDepth * spacesCount;
+    const bracketIndent = replacer.repeat(newDepth);
 
     return [
       '{',
       ...lines,
-      `${depth}${bracketIndent}}`,
+      `${bracketIndent}}`,
     ].join('\n');
 }
 /*  */
-const stringifyJSON = (value, prevDepth = '', replacer = '  ', spacesCount = 2) => {
+const stringifyJSON = (value, prevDepth = '', spacesCount = 1, replacer = '    ') => {
 
   const iter = (currentValue, depth) => {
     if (!_.isPlainObject(currentValue)) {
-      return currentValue.toString();
+      return currentValue;
     }
 
     const indentSize = depth * spacesCount;

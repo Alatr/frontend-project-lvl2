@@ -137,15 +137,15 @@ export const compareTwoFile = (filePath1, filePath2, format) => {
       /*  */
       if (predicates.isBothIsNotOdject(key, object1, object2)) {
         if (predicates.isAdded(key, object1)) {
-          return format.addKeyMessage(key, object1, object2, depth);
+          return format.addKeyMessage(key, object1, object2, depth+1);
         }
         if (predicates.isDeleted(key, object2)) {
-          return format.deleteKeyMessage(key, object1, object2, depth);
+          return format.deleteKeyMessage(key, object1, object2, depth+1);
         }
         if (predicates.isChanged(key, object1, object2)) {
-          return format.changeKeyMessage(key, object1, object2, depth);
+          return format.changeKeyMessage(key, object1, object2, depth+1);
         }
-        return format.unchangeKeyMessage(key, object2[key], depth);
+        return format.unchangeKeyMessage(key, object2[key], depth+1);
       }
       /*  */
 
