@@ -1,8 +1,11 @@
 import _ from 'lodash';
 
 const replacer = '  ';
-const spacesCount = 1;
+const spacesCount = 4;
 const acc = [];
+
+
+
 
 
 export const addKeyMessage = (key, obj1, obj2, depth) => {
@@ -10,7 +13,7 @@ export const addKeyMessage = (key, obj1, obj2, depth) => {
   
   const indent = replacer.repeat(depth);
 
-  acc.push(`${indent}+ ${key}: ${_.isPlainObject(obj2[key]) ? stringifyJSON(obj2[key], indent) : obj2[key]}`);
+  return `${indent}+ ${key}: ${_.isPlainObject(obj2[key]) ? stringifyJSON(obj2[key], indent) : obj2[key]}`;
 }
 /*  */
 /*  */
@@ -18,24 +21,15 @@ export const deleteKeyMessage = (key, obj1, obj2, depth) => {
   // const newDepth = (!_.isPlainObject(obj1[key])) ? depth + 1 : depth;
 
   const indent = replacer.repeat(depth);
-  acc.push(`${indent}- ${key}: ${_.isPlainObject(obj1[key]) ? stringifyJSON(obj1[key], indent) : obj1[key]}`);
+  return `${indent}- ${key}: ${_.isPlainObject(obj1[key]) ? stringifyJSON(obj1[key], indent) : obj1[key]}`;
 } 
 /*  */
 /*  */
-export const fl = (key, val, depth) => {
-  const newDepth = depth;
-  const indent = replacer.repeat(newDepth);
-  acc.push(`@${indent}  ${key}: ${val}`);
-
-}
 export const unchangeKeyMessage = (key, val, depth) => {
   const newDepth = depth;
   const indent = replacer.repeat(newDepth);
   
-  // acc.push(`${indent}  ${key}: ${val}`);
-  // return val;
-  acc.push(`#${indent}  $key: ${key}`);
-  return `##`;
+  return `${indent}  ${key}: ${val}`;
 
 }
 /*  */
@@ -46,16 +40,32 @@ export const changeKeyMessage = (key, obj1, obj2, indent) => [deleteKeyMessage(k
 
 /*  */
 export const printResultMessage = (lines, depth) => {
-  const newDepth = (depth === 1) ? 0 : depth;
+  const newDepth = (depth === 1) ? depth : depth;
     // const indentSize = newDepth * spacesCount;
-    const bracketIndent = replacer.repeat(newDepth);
+    const bracketIndent = replacer.repeat(newDepth-1);
 
     return [
       '{',
-      ...acc,
+      ...lines,
       `${bracketIndent}}`,
     ].join('\n');
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*  */
 const stringifyJSON = (value, prevDepth = '', spacesCount = 1, replacer = '    ') => {
 

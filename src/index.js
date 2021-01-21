@@ -15,6 +15,7 @@ const predicates = {
   // isChanged: (key, obj1, obj2) => _.has(obj1, key) === _.has(obj2, key),
   isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
   isBothIsNotOdject: (key, obj1, obj2) => !_.isPlainObject(obj1[key]) && !_.isPlainObject(obj2[key]),
+  isOneOfIsOdject: (key, obj1, obj2) => !_.isPlainObject(obj1[key]) || !_.isPlainObject(obj2[key]),
 
     // isUnchanged: (key, obj1, obj2) => obj1[key] === obj2[key],
     // isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
@@ -22,28 +23,28 @@ const predicates = {
 
 
 
-// const stringifyJSON = (obj, indent) => {
-//   const iter = (object, acc, treeDepth) => {
-//     const depthIndent = '    '.repeat(treeDepth);
-//     let newAcc = acc;
+const stringify = (value, replacer = ' ', spacesCount = 1) => {
+  const iter = (currentValue, depth) => {
+    if (typeof currentValue !== 'object') {
+      return currentValue.toString();
+    }
 
-//     const keys = _.keys(object);
-//     const lastKey = _.last(keys);
-//     keys.forEach((key) => {
-//       const lastIndent = (lastKey === key) ? '' : '\n';
-//       if (_.isPlainObject(object[key])) {
-//         const res = iter(object[key], '', treeDepth + 1);
-//         newAcc += `${indent}${depthIndent}  ${key}: {\n${res}\n${indent}${depthIndent}  }${lastIndent}`;
-//         return newAcc;
-//       }
-//       const value = (Array.isArray(object[key])) ? `[${object[key].toString()}]` : object[key];
-//       newAcc += `${indent}${depthIndent}  ${key}: ${value}${lastIndent}`;
-//       return newAcc;
-//     });
-//     return newAcc;
-//   };
-//   return `{\n${iter(obj, '', 1)}\n${indent}  }`;
-// };
+    const indentSize = depth * spacesCount;
+    const currentIndent = replacer.repeat(indentSize);
+    const bracketIndent = replacer.repeat(indentSize - spacesCount);
+    const lines = Object
+      .entries(currentValue)
+      .map(([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`);
+
+    return [
+      '{',
+      ...lines,
+      `${bracketIndent}}`,
+    ].join('\n');
+  };
+
+  return iter(value, 1);
+};
 
 
 
@@ -102,29 +103,29 @@ export const compareTwoFile = (filePath1, filePath2, format) => {
   const file2Content = parseFile(path.resolve(process.cwd(), filePath2));
   const startAccVal = format.getAcc();
 
-  // const file1Content = {
-  //   "setting1": "Value 1",
-  //   "setting2": 200,
-  //   "setting3": true,
-  //   "setting6": {
-  //     "key": "value",
-  //     // "doge": {
-  //     //   "wow": ""
-  //     // }
-  //   }
-  // };
-  // const file2Content = {
-  //   "setting2": 100,
-  //   "setting3": true,
-  //   "setting4": false,
-  //   "setting6": {
-  //     "key": "value",
-  //     // "key44": "qwerty",
-  //     // "doge": {
-  //     //   "wow": true
-  //     // }
-  //   }
-  // };
+/*   const file1Content = {
+    "setting1": "Value 1",
+    "setting2": 200,
+    "setting3": true,
+    "setting6": {
+      "key": "value",
+      // "doge": {
+      //   "wow": ""
+      // }
+    }
+  };
+  const file2Content = {
+    "setting2": 100,
+    "setting3": true,
+    "setting4": false,
+    "setting6": {
+      "key": "value",
+      // "key44": "qwerty",
+      // "doge": {
+      //   "wow": true
+      // }
+    }
+  }; */
 
   const iter = (object1, object2, acc) => {
     const keys = _.union(_.keys(object1), _.keys(object2)).sort();
@@ -142,7 +143,7 @@ export const compareTwoFile = (filePath1, filePath2, format) => {
         if (predicates.isChanged(key, object1, object2)) {
           return format.changeKeyMessage(key, object1, object2, acc);
         }
-        return format.fl(key, object2[key], acc);
+        return format.unchangeKeyMessage(key, object2[key], acc);
       }
       /*  */
 
@@ -154,11 +155,11 @@ export const compareTwoFile = (filePath1, filePath2, format) => {
         return format.deleteKeyMessage(key, object1, object2, acc);
 
       }
-      if ( !_.isPlainObject(object1[key]) || !_.isPlainObject(object2[key])) {
+      if ( predicates.isOneOfIsOdject(key, object1, object2)) {
           return format.changeKeyMessage(key, object1, object2, acc);
       }
       const result = iter(object1[key], object2[key], format.incrementAcc(acc, key))
-      return format.unchangeKeyMessage(key, result);
+      return format.unchangeKeyMessage(key, result, acc);
     });
     
     const flatenLines = lines.flatMap((line) => line);
@@ -179,7 +180,7 @@ export const gendiff = () => {
   program
     .version('0.1.0')
     .description('Compares two configuration files and shows a difference.')
-    .option('-f, --format [type]', 'output format', 'stylish');
+    .option('-f, --format [type]', 'output format', 'plain');
   program
     .arguments('<filepath1> <filepath2>')
     .action((filepath1, filepath2) => {
