@@ -100,15 +100,17 @@ const predicates = {
 export const compareTwoFile = (filePath1, filePath2, format) => {
   const file1Content = parseFile(path.resolve(process.cwd(), filePath1));
   const file2Content = parseFile(path.resolve(process.cwd(), filePath2));
+  const startAccVal = format.getAcc();
+
   // const file1Content = {
   //   "setting1": "Value 1",
   //   "setting2": 200,
   //   "setting3": true,
   //   "setting6": {
   //     "key": "value",
-  //     "doge": {
-  //       "wow": ""
-  //     }
+  //     // "doge": {
+  //     //   "wow": ""
+  //     // }
   //   }
   // };
   // const file2Content = {
@@ -117,69 +119,57 @@ export const compareTwoFile = (filePath1, filePath2, format) => {
   //   "setting4": false,
   //   "setting6": {
   //     "key": "value",
-  //     "key44": "qwerty",
-  //     "doge": {
-  //       "wow": true
-  //     }
+  //     // "key44": "qwerty",
+  //     // "doge": {
+  //     //   "wow": true
+  //     // }
   //   }
   // };
 
-  const iter = (object1, object2, depth) => {
+  const iter = (object1, object2, acc) => {
     const keys = _.union(_.keys(object1), _.keys(object2)).sort();
-    const replacer = '  ';
-    const spacesCount = 1;
-    const indentSize = depth * spacesCount;
-    const currentIndent = replacer.repeat(indentSize);
-    const bracketIndent = replacer.repeat(indentSize - spacesCount);
 
 
     let lines = keys.map((key) => {
       /*  */
       if (predicates.isBothIsNotOdject(key, object1, object2)) {
         if (predicates.isAdded(key, object1)) {
-          return format.addKeyMessage(key, object1, object2, depth+1);
+          return format.addKeyMessage(key, object1, object2, acc);
         }
         if (predicates.isDeleted(key, object2)) {
-          return format.deleteKeyMessage(key, object1, object2, depth+1);
+          return format.deleteKeyMessage(key, object1, object2, acc);
         }
         if (predicates.isChanged(key, object1, object2)) {
-          return format.changeKeyMessage(key, object1, object2, depth+1);
+          return format.changeKeyMessage(key, object1, object2, acc);
         }
-        return format.unchangeKeyMessage(key, object2[key], depth+1);
+        return format.fl(key, object2[key], acc);
       }
       /*  */
 
       if (predicates.isAdded(key, object1)) {
-        return format.addKeyMessage(key, object1, object2, depth);
+        return format.addKeyMessage(key, object1, object2, acc);
 
       }
       if (predicates.isDeleted(key, object2)) {
-        return format.deleteKeyMessage(key, object1, object2, depth);
+        return format.deleteKeyMessage(key, object1, object2, acc);
 
       }
       if ( !_.isPlainObject(object1[key]) || !_.isPlainObject(object2[key])) {
-          return format.changeKeyMessage(key, object1, object2, depth);
+          return format.changeKeyMessage(key, object1, object2, acc);
       }
-
-      return format.unchangeKeyMessage(key, iter(object1[key], object2[key], depth + 1), depth);
+      const result = iter(object1[key], object2[key], format.incrementAcc(acc, key))
+      return format.unchangeKeyMessage(key, result);
     });
-
-
     
     const flatenLines = lines.flatMap((line) => line);
-
     
-    return format.printResultMessage(flatenLines, depth);
+    return format.printResultMessage(flatenLines, acc);
 
-    return [
-      '{',
-      ...flatenLines,
-      `${bracketIndent}}`,
-    ].join('\n');
+
     /*  */
   };
 
-  return iter(file1Content, file2Content, 1);
+  return iter(file1Content, file2Content, startAccVal);
 };
 
 
@@ -193,7 +183,7 @@ export const gendiff = () => {
   program
     .arguments('<filepath1> <filepath2>')
     .action((filepath1, filepath2) => {
-      const format = getFormat(program.format)
+      const format = getFormat(program.format);
       const resultCompare = compareTwoFile(filepath1, filepath2, format);
 
       console.log(resultCompare);

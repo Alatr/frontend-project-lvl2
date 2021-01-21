@@ -2,13 +2,15 @@ import _ from 'lodash';
 
 const replacer = '  ';
 const spacesCount = 1;
+const acc = [];
+
 
 export const addKeyMessage = (key, obj1, obj2, depth) => {
   // const newDepth = (_.isPlainObject(obj2[key])) ? depth + 1  : depth;
   
   const indent = replacer.repeat(depth);
 
-  return `${indent}+ ${key}: ${_.isPlainObject(obj2[key]) ? stringifyJSON(obj2[key], indent) : obj2[key]}`;
+  acc.push(`${indent}+ ${key}: ${_.isPlainObject(obj2[key]) ? stringifyJSON(obj2[key], indent) : obj2[key]}`);
 }
 /*  */
 /*  */
@@ -16,15 +18,25 @@ export const deleteKeyMessage = (key, obj1, obj2, depth) => {
   // const newDepth = (!_.isPlainObject(obj1[key])) ? depth + 1 : depth;
 
   const indent = replacer.repeat(depth);
-  return `${indent}- ${key}: ${_.isPlainObject(obj1[key]) ? stringifyJSON(obj1[key], indent) : obj1[key]}`;
+  acc.push(`${indent}- ${key}: ${_.isPlainObject(obj1[key]) ? stringifyJSON(obj1[key], indent) : obj1[key]}`);
 } 
 /*  */
 /*  */
+export const fl = (key, val, depth) => {
+  const newDepth = depth;
+  const indent = replacer.repeat(newDepth);
+  acc.push(`@${indent}  ${key}: ${val}`);
+
+}
 export const unchangeKeyMessage = (key, val, depth) => {
   const newDepth = depth;
   const indent = replacer.repeat(newDepth);
   
-  return `${indent}  ${key}: ${val}`;
+  // acc.push(`${indent}  ${key}: ${val}`);
+  // return val;
+  acc.push(`#${indent}  $key: ${key}`);
+  return `##`;
+
 }
 /*  */
 /*  */
@@ -40,7 +52,7 @@ export const printResultMessage = (lines, depth) => {
 
     return [
       '{',
-      ...lines,
+      ...acc,
       `${bracketIndent}}`,
     ].join('\n');
 }
@@ -68,3 +80,8 @@ const stringifyJSON = (value, prevDepth = '', spacesCount = 1, replacer = '    '
 
   return iter(value, 1);
 };
+
+export const getAcc = () => 1;
+export const incrementAcc = (acc, val) => acc + 1;
+
+// acc + key+'.'
