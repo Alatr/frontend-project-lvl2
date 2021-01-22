@@ -16,7 +16,8 @@ export const deleteKeyMessage = (key, obj1, obj2, depth) => {
 /*  */
 /*  */
 export const unchangeKeyMessage = (key, val, depth) => {
-  return val;
+  
+  if (!_.isPlainObject(val)) {return val};
 }
 /*  */
 /*  */

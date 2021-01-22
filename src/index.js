@@ -11,14 +11,10 @@ const predicates = {
   isDeleted: (key, obj) => !_.has(obj, key),
   isAdded: (key, obj) => !_.has(obj, key),
   isUnchanged: (key, obj1, obj2) => _.has(obj1, key) !== _.has(obj2, key),
-  // isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
-  // isChanged: (key, obj1, obj2) => _.has(obj1, key) === _.has(obj2, key),
   isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
   isBothIsNotOdject: (key, obj1, obj2) => !_.isPlainObject(obj1[key]) && !_.isPlainObject(obj2[key]),
   isOneOfIsOdject: (key, obj1, obj2) => !_.isPlainObject(obj1[key]) || !_.isPlainObject(obj2[key]),
 
-    // isUnchanged: (key, obj1, obj2) => obj1[key] === obj2[key],
-    // isChanged: (key, obj1, obj2) => obj1[key] !== obj2[key],
 };
 
 
@@ -101,31 +97,32 @@ const stringify = (value, replacer = ' ', spacesCount = 1) => {
 export const compareTwoFile = (filePath1, filePath2, format) => {
   const file1Content = parseFile(path.resolve(process.cwd(), filePath1));
   const file2Content = parseFile(path.resolve(process.cwd(), filePath2));
+  console.log(format);
   const startAccVal = format.getAcc();
 
-/*   const file1Content = {
-    "setting1": "Value 1",
-    "setting2": 200,
-    "setting3": true,
-    "setting6": {
-      "key": "value",
-      // "doge": {
-      //   "wow": ""
-      // }
-    }
-  };
-  const file2Content = {
-    "setting2": 100,
-    "setting3": true,
-    "setting4": false,
-    "setting6": {
-      "key": "value",
-      // "key44": "qwerty",
-      // "doge": {
-      //   "wow": true
-      // }
-    }
-  }; */
+// const file1Content = {
+//     "setting1": "Value 1",
+//     "setting2": 200,
+//     "setting3": true,
+//     "setting6": {
+//       "key": "value",
+//       "doge": {
+//         "wow": ""
+//       }
+//     }
+//   };
+//   const file2Content = {
+//     "setting2": 100,
+//     "setting3": true,
+//     "setting4": false,
+//     "setting6": {
+//       "key": "value",
+//       "key44": "qwerty",
+//       "doge": {
+//         "wow": true
+//       }
+//     }
+//   }; 
 
   const iter = (object1, object2, acc) => {
     const keys = _.union(_.keys(object1), _.keys(object2)).sort();
@@ -180,7 +177,7 @@ export const gendiff = () => {
   program
     .version('0.1.0')
     .description('Compares two configuration files and shows a difference.')
-    .option('-f, --format [type]', 'output format', 'plain');
+    .option('-f, --format [type]', 'output format', 'stylish');
   program
     .arguments('<filepath1> <filepath2>')
     .action((filepath1, filepath2) => {
