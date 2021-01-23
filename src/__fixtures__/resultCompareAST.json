@@ -1,0 +1,162 @@
+[
+  {
+    "name": "common",
+    "status": "updated",
+    "value": "complex",
+    "children": [
+      {
+        "name": "follow",
+        "value": false,
+        "status": "added"
+      },
+      {
+        "name": "setting1",
+        "status": "unchanged",
+        "value": "Value 1"
+      },
+      {
+        "name": "setting2",
+        "value": 200,
+        "status": "removed"
+      },
+      {
+        "name": "setting3",
+        "status": "updated",
+        "value": null,
+        "oldValue": true
+      },
+      {
+        "name": "setting4",
+        "value": "blah blah",
+        "status": "added"
+      },
+      {
+        "name": "setting5",
+        "value": "complex",
+        "status": "added",
+        "children": [
+          {
+            "name": "key5",
+            "value": "value5",
+            "status": "added"
+          }
+        ]
+      },
+      {
+        "name": "setting6",
+        "status": "updated",
+        "value": "complex",
+        "children": [
+          {
+            "name": "doge",
+            "status": "updated",
+            "value": "complex",
+            "children": [
+              {
+                "name": "wow",
+                "status": "updated",
+                "value": "so much",
+                "oldValue": ""
+              }
+            ]
+          },
+          {
+            "name": "key",
+            "status": "unchanged",
+            "value": "value"
+          },
+          {
+            "name": "ops",
+            "value": "vops",
+            "status": "added"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "group1",
+    "status": "updated",
+    "value": "complex",
+    "children": [
+      {
+        "name": "baz",
+        "status": "updated",
+        "value": "bars",
+        "oldValue": "bas"
+      },
+      {
+        "name": "foo",
+        "status": "unchanged",
+        "value": "bar"
+      },
+      {
+        "name": "nest",
+        "status": "updated",
+        "value": "str",
+        "oldValue": [
+          {
+            "name": "key",
+            "value": "value",
+            "status": "removed"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "group2",
+    "value": "complex",
+    "status": "removed",
+    "children": [
+      {
+        "name": "abc",
+        "value": 12345,
+        "status": "removed"
+      },
+      {
+        "name": "deep",
+        "value": "complex",
+        "status": "removed",
+        "children": [
+          {
+            "name": "id",
+            "value": 45,
+            "status": "removed"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "group3",
+    "value": "complex",
+    "status": "added",
+    "children": [
+      {
+        "name": "fee",
+        "value": 100500,
+        "status": "added"
+      },
+      {
+        "name": "deep",
+        "value": "complex",
+        "status": "added",
+        "children": [
+          {
+            "name": "id",
+            "value": "complex",
+            "status": "added",
+            "children": [
+              {
+                "name": "number",
+                "value": 45,
+                "status": "added"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,43 +1,36 @@
 import _ from 'lodash';
 
-const acc = [];
-const spacesCount = 1;
+function createObjectLabel(object, value, label = '[complex value]') {
+  return `${_.isPlainObject(object) ? label : value}`;
+}
+function createQuotesAroundString(object) {
+  return (_.isString(object)) ? `'${object}'` : object;
+}
+
 export const addKeyMessage = (key, obj1, obj2, depth) => {
-  const value = (_.isString(obj2[key])) ? `'${obj2[key]}'` : obj2[key]
-  return `Property '${depth}${key}' was added with value: ${_.isPlainObject(obj2[key]) ? '[complex value]' : value}`;
-  acc.push(`Property '${depth}${key}' was added with value: ${_.isPlainObject(obj2[key]) ? '[complex value]' : value}`);
-}
+  const value = createQuotesAroundString(obj2[key]);
+  return `Property '${depth}${key}' was added with value: ${createObjectLabel(obj2[key], value)}`;
+};
 /*  */
 /*  */
-export const deleteKeyMessage = (key, obj1, obj2, depth) => {
-  return `Property '${depth}${key}' was removed`;
-  acc.push(`Property '${depth}${key}' was removed`);
-} 
+export const deleteKeyMessage = (key, obj1, obj2, depth) => `Property '${depth}${key}' was removed`;
 /*  */
 /*  */
-export const unchangeKeyMessage = (key, val, depth) => {
-  
-  if (!_.isPlainObject(val)) {return val};
-}
+export const unchangeKeyMessage = (key, val) => ((val.slice(0, 9) !== 'Property ') ? [] : val);
 /*  */
 /*  */
 export const changeKeyMessage = (key, obj1, obj2, depth) => {
-  const oldValue = (_.isString(obj1[key])) ? `'${obj1[key]}'` : obj1[key];
-  const newValue = (_.isString(obj2[key])) ? `'${obj2[key]}'` : obj2[key];
+  const oldValue = createQuotesAroundString(obj1[key]);
+  const newValue = createQuotesAroundString(obj2[key]);
 
-
-  return `Property '${depth}${key}' was updated. From ${_.isPlainObject(obj1[key]) ? '[complex value]' : oldValue} to ${_.isPlainObject(obj2[key]) ? '[complex value]' : newValue}`
-  acc.push(`Property '${depth}${key}' was updated. From ${_.isPlainObject(obj1[key]) ? '[complex value]' : oldValue} to ${_.isPlainObject(obj2[key]) ? '[complex value]' : newValue}`)
-
-}
+  return `Property '${depth}${key}' was updated. From ${createObjectLabel(obj1[key], oldValue)} to ${createObjectLabel(obj2[key], newValue)}`;
+};
 /*  */
 /*  */
 
 /*  */
-export const printResultMessage = (lines, depth) => {
-    return [...lines].join('\n');
-}
+export const printResultMessage = (lines) => [...lines].join('\n');
 export const getAcc = () => '';
-export const incrementAcc = (acc, val) => acc + val + '.';
+export const incrementAcc = (acc, val) => `${acc + val}.`;
 
 /*  */

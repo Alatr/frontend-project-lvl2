@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 
-export const parseFile = (pathFile) => {
+export default (pathFile) => {
   const extension = path.extname(pathFile);
   const fileContent = fs.readFileSync(pathFile, 'utf-8');
   switch (extension) {
