@@ -12,7 +12,6 @@ program
   .option('-f, --format [type]', 'output format', 'stylish')
   .arguments('<filepath1> <filepath2>')
   .action((filepath1, filepath2) => {
-    console.log(program.format);
     const resultCompare = compareTwoFile(filepath1, filepath2, program.format);
 
     console.log(resultCompare);
