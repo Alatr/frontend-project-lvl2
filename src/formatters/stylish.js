@@ -24,7 +24,7 @@ const stringifyJSON = (value, prevDepth = '', spacesCount = 2, replacer = '  ') 
   return iter(value, 1);
 };
 
-function getCurrentIndent(depth, spacesCount = 2, replacer = '  '){
+function getCurrentIndent(depth, spacesCount = 2, replacer = '  ') {
   const indentSize = depth * spacesCount;
   return replacer.repeat(indentSize - spacesCount);
 }
