@@ -1,4 +1,4 @@
-import { Command } from 'commander';
+import Command from 'commander';
 import _ from 'lodash';
 import process from 'process';
 import path from 'path';
