@@ -56,11 +56,11 @@ Example call:
 
 ## Output format
 
-** CLI supports 3 type formats **
+#### CLI supports 3 type formats
 <!-- toc -->
-- [Stulih]
-- [Plain]
-- [AST json]
+- Stulih
+- Plain
+- AST json
 
 ### Output stulish format
 Stulish format selected by default.
