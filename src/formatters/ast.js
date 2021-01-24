@@ -67,18 +67,20 @@ function isJson(data) {
   return true;
 }
 export const unchangeKeyMessage = (key, val) => {
-  const result = { name: key };
-
   if (isJson(val)) {
-    result.status = 'updated';
-    result.value = 'complex';
-    result.children = JSON.parse([val], null, '  ');
-  } else {
-    result.status = 'unchanged';
-    result.value = val;
+    return {
+      name: key,
+      status: 'updated',
+      value: 'complex',
+      children: JSON.parse([val], null, '  '),
+    };
   }
 
-  return result;
+  return {
+    name: key,
+    status: 'unchanged',
+    value: val,
+  };
 };
 /*  */
 /*  */
