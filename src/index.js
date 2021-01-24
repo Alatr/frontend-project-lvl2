@@ -1,4 +1,4 @@
-import Command from 'commander';
+import { Command } from 'commander';
 import _ from 'lodash';
 import process from 'process';
 import path from 'path';
@@ -66,7 +66,7 @@ export const compareTwoFile = (filePath1, filePath2, formaterType) => {
   return iter(file1Content, file2Content, startAccVal);
 };
 
-export const gendiff = () => {
+export default () => {
   const program = new Command();
 
   program
