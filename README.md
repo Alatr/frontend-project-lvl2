@@ -26,7 +26,7 @@ CLI compares two configuration files and shows a difference.
 make install
 ```
 
-## Help
+## Get help
 
 Yields the following help output:
 
@@ -44,6 +44,24 @@ Options:
   -f, --format [type]  output format (default: "stylish")
   -h, --help           display help for command
 ```
+
+## Arguments and options
+
+Angled brackets (e.g. ```<required>```) indicate required command-arguments. Square brackets (e.g. ```[optional]```) indicate optional command-arguments.
+
+```gendiff [options] <filepath1> <filepath2>```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ###### asciinema display help
 [![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
