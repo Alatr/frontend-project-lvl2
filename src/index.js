@@ -19,7 +19,6 @@ const predicates = {
 export default (filePath1, filePath2, formaterType) => {
   const file1Content = parseFile(path.resolve(process.cwd(), filePath1));
   const file2Content = parseFile(path.resolve(process.cwd(), filePath2));
-
   const format = getFormat(formaterType);
 
   const startAccVal = format.getAcc();
