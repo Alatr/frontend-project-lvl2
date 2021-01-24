@@ -9,7 +9,7 @@ const createASTObject = (value, status) => {
     const lines = Object
       .entries(currentValue)
       .map(([key, val]) => {
-        const result = { name: key };
+        let result = { name: key };
         if (_.isObject(val)) {
           result.value = 'complex';
           result.status = status;

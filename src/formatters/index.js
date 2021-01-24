@@ -11,4 +11,3 @@ export default function getFormat(formatName = 'stylish') {
   }
   return formaters[formatName];
 }
-

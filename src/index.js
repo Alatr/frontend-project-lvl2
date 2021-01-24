@@ -24,7 +24,7 @@ export default (filePath1, filePath2, formaterType) => {
   const startAccVal = format.getAcc();
 
   const iter = (object1, object2, acc) => {
-    const keys = _.union(_.keys(object1), _.keys(object2)).sort();
+    const keys = _.sortBy(_.union(_.keys(object1), _.keys(object2)));
 
     const lines = keys.map((key) => {
       /*  */
