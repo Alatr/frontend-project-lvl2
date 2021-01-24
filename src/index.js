@@ -19,9 +19,9 @@ const predicates = {
 export default (filePath1, filePath2, formaterType) => {
   const file1Content = parseFile(path.resolve(process.cwd(), filePath1));
   const file2Content = parseFile(path.resolve(process.cwd(), filePath2));
-  const format = getFormat(formaterType);
+  const formater = getFormat(formaterType);
 
-  const startAccVal = format.getAcc();
+  const accumValue = formater.getAcc();
 
   const iter = (object1, object2, acc) => {
     const keys = _.sortBy(_.union(_.keys(object1), _.keys(object2)));
@@ -30,35 +30,35 @@ export default (filePath1, filePath2, formaterType) => {
       /*  */
       if (predicates.isBothIsNotOdject(key, object1, object2)) {
         if (predicates.isAdded(key, object1)) {
-          return format.addKeyMessage(key, object1, object2, acc);
+          return formater.addKeyMessage(key, object1, object2, acc);
         }
         if (predicates.isDeleted(key, object2)) {
-          return format.deleteKeyMessage(key, object1, object2, acc);
+          return formater.deleteKeyMessage(key, object1, object2, acc);
         }
         if (predicates.isChanged(key, object1, object2)) {
-          return format.changeKeyMessage(key, object1, object2, acc);
+          return formater.changeKeyMessage(key, object1, object2, acc);
         }
-        return format.unchangeKeyMessage(key, object2[key], acc);
+        return formater.unchangeKeyMessage(key, object2[key], acc);
       }
       /*  */
 
       if (predicates.isAdded(key, object1)) {
-        return format.addKeyMessage(key, object1, object2, acc);
+        return formater.addKeyMessage(key, object1, object2, acc);
       }
       if (predicates.isDeleted(key, object2)) {
-        return format.deleteKeyMessage(key, object1, object2, acc);
+        return formater.deleteKeyMessage(key, object1, object2, acc);
       }
       if (predicates.isOneOfIsOdject(key, object1, object2)) {
-        return format.changeKeyMessage(key, object1, object2, acc);
+        return formater.changeKeyMessage(key, object1, object2, acc);
       }
-      const result = iter(object1[key], object2[key], format.incrementAcc(acc, key));
-      return format.unchangeKeyMessage(key, result, acc);
+      const result = iter(object1[key], object2[key], formater.incrementAcc(acc, key));
+      return formater.unchangeKeyMessage(key, result, acc);
     });
 
     const flatenLines = lines.flatMap((line) => line);
 
-    return format.printResultMessage(flatenLines, acc);
+    return formater.printResultMessage(flatenLines, acc);
   };
 
-  return iter(file1Content, file2Content, startAccVal);
+  return iter(file1Content, file2Content, accumValue);
 };
