@@ -79,7 +79,6 @@ export default () => {
       const resultCompare = compareTwoFile(filepath1, filepath2, program.format);
 
       console.log(resultCompare);
-    });
-
-  program.parse(process.argv);
+    })
+    .parse(process.argv);
 };
