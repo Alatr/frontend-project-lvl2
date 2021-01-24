@@ -8,18 +8,6 @@
 
 CLI compares two configuration files and shows a difference.
 
-**Table of Contents**
-
-<!-- toc -->
-
-- [Install](#install)
-- [Game types list](#game-types-list)
-	- [Parity game ](#parity-game)
-		- [usage](#parity-game-usage)
-		- [asciinema](#parity-game-asciinema)
-
-<!-- tocstop -->
-
 ## Install
 
 ```
