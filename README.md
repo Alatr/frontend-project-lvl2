@@ -58,9 +58,9 @@ Example call:
 
 ** CLI supports 3 type formats **
 <!-- toc -->
-- [Stulih](#stulih-type)
-- [Plain](#plain-type)
-- [AST json](#json-type)
+- [Stulih]
+- [Plain]
+- [AST json]
 
 ### Output stulish format
 Stulish format selected by default.
@@ -139,11 +139,6 @@ $ gendiff filepath1.json filepath2.json -f json
     ]
   }
 ]
+```
 ###### asciinema output json format
 [![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
-```
-
-
-
-
-
