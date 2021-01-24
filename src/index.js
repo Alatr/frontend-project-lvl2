@@ -72,8 +72,8 @@ export default () => {
   program
     .version('0.1.0')
     .description('Compares two configuration files and shows a difference.')
-    .option('-f, --format [type]', 'output format', 'stylish');
-  program
+    .allowUnknownOption()
+    .option('-f, --format [type]', 'output format', 'stylish')
     .arguments('<filepath1> <filepath2>')
     .action((filepath1, filepath2) => {
       const resultCompare = compareTwoFile(filepath1, filepath2, program.format);
@@ -81,5 +81,5 @@ export default () => {
       console.log(resultCompare);
     });
 
-  program.parse();
+  program.parse(process.argv);
 };
