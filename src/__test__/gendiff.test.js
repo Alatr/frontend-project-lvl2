@@ -3,7 +3,7 @@ import { test, expect } from '@jest/globals';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import { compareTwoFile } from '../index.js';
+import compareTwoFile from '../index.js';
 /*  */
 
 const __filename = fileURLToPath(import.meta.url);

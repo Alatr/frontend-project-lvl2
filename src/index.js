@@ -1,6 +1,4 @@
-import { Command } from 'commander';
 import _ from 'lodash';
-import process from 'process';
 import path from 'path';
 import parseFile from './parsers.js';
 import getFormat from './formatters/index.js';
@@ -18,7 +16,7 @@ const predicates = {
   isOneOfIsOdject: (key, obj1, obj2) => !_.isPlainObject(obj1[key]) || !_.isPlainObject(obj2[key]),
 };
 
-export const compareTwoFile = (filePath1, filePath2, formaterType) => {
+export default (filePath1, filePath2, formaterType) => {
   const file1Content = parseFile(path.resolve(process.cwd(), filePath1));
   const file2Content = parseFile(path.resolve(process.cwd(), filePath2));
 
@@ -64,22 +62,4 @@ export const compareTwoFile = (filePath1, filePath2, formaterType) => {
   };
 
   return iter(file1Content, file2Content, startAccVal);
-};
-
-export default () => {
-  const program = new Command();
-
-  program
-    .version('0.1.0')
-    .description('Compares two configuration files and shows a difference.')
-    .allowUnknownOption()
-    .option('-f, --format [type]', 'output format', 'stylish')
-    .arguments('<filepath1> <filepath2>')
-    .action((filepath1, filepath2) => {
-      const resultCompare = compareTwoFile(filepath1, filepath2, program.format);
-
-      console.log(resultCompare);
-    });
-
-  program.parse(process.argv);
 };
