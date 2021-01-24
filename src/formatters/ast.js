@@ -9,17 +9,19 @@ const createASTObject = (value, status) => {
     const lines = Object
       .entries(currentValue)
       .map(([key, val]) => {
-        const result = { name: key };
         if (_.isObject(val)) {
-          result.value = 'complex';
-          result.status = status;
-          result.children = createASTObject(val, status);
-        } else {
-          result.value = iter(val, status);
-          result.status = status;
+          return {
+            name: key,
+            value: 'complex',
+            status,
+            children: createASTObject(val, status),
+          };
         }
-
-        return result;
+        return {
+          name: key,
+          value: iter(val, status),
+          status,
+        };
       });
 
     return [...lines];
@@ -29,31 +31,37 @@ const createASTObject = (value, status) => {
 };
 
 export const addKeyMessage = (key, obj1, obj2) => {
-  const result = { name: key };
   if (_.isObject(obj2[key])) {
-    result.value = 'complex';
-    result.status = 'added';
-    result.children = createASTObject(obj2[key], 'added');
-  } else {
-    result.value = obj2[key];
-    result.status = 'added';
+    return {
+      name: key,
+      value: 'complex',
+      status: 'added',
+      children: createASTObject(obj2[key], 'added'),
+    };
   }
 
-  return result;
+  return {
+    name: key,
+    value: obj2[key],
+    status: 'added',
+  };
 };
 /*  */
 /*  */
 export const deleteKeyMessage = (key, obj1) => {
-  const result = { name: key };
   if (_.isObject(obj1[key])) {
-    result.value = 'complex';
-    result.status = 'removed';
-    result.children = createASTObject(obj1[key], 'removed');
-  } else {
-    result.value = obj1[key];
-    result.status = 'removed';
+    return {
+      name: key,
+      value: 'complex',
+      status: 'removed',
+      children: createASTObject(obj1[key], 'removed'),
+    };
   }
-  return result;
+  return {
+    name: key,
+    value: obj1[key],
+    status: 'removed',
+  };
 };
 /*  */
 /*  */
