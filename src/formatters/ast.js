@@ -57,9 +57,10 @@ export const deleteKeyMessage = (key, obj1) => {
 };
 /*  */
 /*  */
-function isJson(str) {
+function isJson(data) {
+  const newData = data;
   try {
-    JSON.parse(str);
+    JSON.parse(newData);
   } catch (e) {
     return false;
   }
@@ -82,20 +83,12 @@ export const unchangeKeyMessage = (key, val) => {
 /*  */
 /*  */
 
-export const changeKeyMessage = (key, obj1, obj2) => {
-  const result = {
-    name: key,
-    status: 'updated',
-    value: obj2[key],
-    oldValue: obj1[key],
-  };
-
-  if (_.isObject(obj1[key])) {
-    result.oldValue = createASTObject(obj1[key], 'removed');
-  }
-
-  return result;
-};
+export const changeKeyMessage = (key, obj1, obj2) => ({
+  name: key,
+  status: 'updated',
+  value: obj2[key],
+  oldValue: (_.isObject(obj1[key])) ? createASTObject(obj1[key], 'removed') : obj1[key],
+});
 /*  */
 /*  */
 
