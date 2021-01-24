@@ -45,6 +45,9 @@ Options:
   -h, --help           display help for command
 ```
 
+###### asciinema help
+[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
+
 ## Arguments and options
 
 
@@ -60,6 +63,8 @@ Angled brackets (e.g. ```<required>```) indicate required command-arguments. Squ
 Example call:
   $ gendiff file.json file2.yml
 ```
+###### asciinema different file formats
+[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
 
 ## Output format
 
@@ -86,6 +91,8 @@ $ gendiff filepath1.json filepath2.json -f stylish
   + verbose: true
 }
 ```
+###### asciinema output stylish format
+[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
 ### Output plain format
 for plain format you need to specify a flag
 
@@ -104,6 +111,8 @@ Property 'group1.nest' was updated. From [complex value] to 'str'
 Property 'group2' was removed
 Property 'group3' was added with value: [complex value]
 ```
+###### asciinema output plain format
+[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
 ### Output json format
 for json format you need to specify a flag
 
@@ -142,11 +151,11 @@ $ gendiff filepath1.json filepath2.json -f json
     ]
   }
 ]
+###### asciinema output json format
+[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
 ```
 
 
 
-###### asciinema display help
-[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
 
 
