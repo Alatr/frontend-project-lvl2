@@ -3,7 +3,6 @@ import path from 'path';
 import parseFile from './parsers.js';
 import getFormat from './formatters/index.js';
 
-// gendiff src/__fixtures__/file1.json src/__fixtures__/file2.json
 
 const predicates = {
   isDeleted: (key, obj) => !_.has(obj, key),

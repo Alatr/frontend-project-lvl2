@@ -4,9 +4,9 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/02a65054e8a4b3e2275b/maintainability)](https://codeclimate.com/github/Alatr/frontend-project-lvl2/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/02a65054e8a4b3e2275b/test_coverage)](https://codeclimate.com/github/Alatr/frontend-project-lvl2/test_coverage)
 
-# Difference calculator
+# Gendiff
 
-CLI compares two configuration files and shows a difference.
+CLI compares two configuration files and shows a difference. This project can be used as a CLI utility, and as a module
 
 ## Install
 
@@ -33,36 +33,37 @@ Options:
   -h, --help           display help for command
 ```
 
-###### asciinema help
-[![asciicast](https://asciinema.org/a/hHVA3kyXDWHX89WHVR2fWBQ60.svg)](https://asciinema.org/a/hHVA3kyXDWHX89WHVR2fWBQ60)
-
 ## Arguments and options
 
-
-Angled brackets (e.g. ```<required>```) indicate required command-arguments. Square brackets (e.g. ```[optional]```) indicate optional command-arguments.
-
 ```gendiff [options] <filepath1> <filepath2>```
+###### Options format
+<!-- toc -->
+- --format stylish
+- --format plain
+- --format json
 
+###### Available file extension
+<!-- toc -->
+- json
+- yml
 
-## Support for different file formats for comparison. YML and JSON
-
+###### example with different file extension
+[![asciicast](https://asciinema.org/a/6CKwxmigLMFHHqkCJkTZehvr0.svg)](https://asciinema.org/a/6CKwxmigLMFHHqkCJkTZehvr0)
 
 ```
 Example call:
   $ gendiff file.json file2.yml
 ```
-###### asciinema different file formats
-[![asciicast](https://asciinema.org/a/6CKwxmigLMFHHqkCJkTZehvr0.svg)](https://asciinema.org/a/6CKwxmigLMFHHqkCJkTZehvr0)
 
 ## Output format
 
 #### CLI supports 3 type formats output
 <!-- toc -->
-- Stulih
+- Stylish
 - Plain
 - AST json
 
-### Output stulish format
+### Stylish format output
 Stulish format selected by default.
 
 ```
@@ -79,10 +80,9 @@ $ gendiff filepath1.json filepath2.json -f stylish
   + verbose: true
 }
 ```
-###### asciinema output stylish format
+###### example with stylish format output
 [![asciicast](https://asciinema.org/a/gKGl8EGQnPk9FqXJFctIVLsZ0.svg)](https://asciinema.org/a/gKGl8EGQnPk9FqXJFctIVLsZ0)
-### Output plain format
-for plain format you need to specify a flag
+### Plain format output
 
 ```
 $ gendiff filepath1.json filepath2.json -f plain
@@ -99,9 +99,9 @@ Property 'group1.nest' was updated. From [complex value] to 'str'
 Property 'group2' was removed
 Property 'group3' was added with value: [complex value]
 ```
-###### asciinema output plain format
+###### example with plain format output
 [![asciicast](https://asciinema.org/a/qxv58sHY2rKdZ70FEyjriOPc5.svg)](https://asciinema.org/a/qxv58sHY2rKdZ70FEyjriOPc5)
-### Output json format
+### JSON format output
 for json format you need to specify a flag
 
 ```
@@ -140,5 +140,5 @@ $ gendiff filepath1.json filepath2.json -f json
   }
 ]
 ```
-###### asciinema output json format
+###### example with json format output
 [![asciicast](https://asciinema.org/a/IK17dS05xYePtyaz9TZPDKMAV.svg)](https://asciinema.org/a/IK17dS05xYePtyaz9TZPDKMAV)
