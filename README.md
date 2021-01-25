@@ -34,7 +34,7 @@ Options:
 ```
 
 ###### asciinema help
-[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
+[![asciicast](https://asciinema.org/a/hHVA3kyXDWHX89WHVR2fWBQ60.svg)](https://asciinema.org/a/hHVA3kyXDWHX89WHVR2fWBQ60)
 
 ## Arguments and options
 
@@ -52,11 +52,11 @@ Example call:
   $ gendiff file.json file2.yml
 ```
 ###### asciinema different file formats
-[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
+[![asciicast](https://asciinema.org/a/6CKwxmigLMFHHqkCJkTZehvr0.svg)](https://asciinema.org/a/6CKwxmigLMFHHqkCJkTZehvr0)
 
 ## Output format
 
-#### CLI supports 3 type formats
+#### CLI supports 3 type formats output
 <!-- toc -->
 - Stulih
 - Plain
@@ -80,7 +80,7 @@ $ gendiff filepath1.json filepath2.json -f stylish
 }
 ```
 ###### asciinema output stylish format
-[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
+[![asciicast](https://asciinema.org/a/gKGl8EGQnPk9FqXJFctIVLsZ0.svg)](https://asciinema.org/a/gKGl8EGQnPk9FqXJFctIVLsZ0)
 ### Output plain format
 for plain format you need to specify a flag
 
@@ -100,7 +100,7 @@ Property 'group2' was removed
 Property 'group3' was added with value: [complex value]
 ```
 ###### asciinema output plain format
-[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
+[![asciicast](https://asciinema.org/a/qxv58sHY2rKdZ70FEyjriOPc5.svg)](https://asciinema.org/a/qxv58sHY2rKdZ70FEyjriOPc5)
 ### Output json format
 for json format you need to specify a flag
 
@@ -141,4 +141,4 @@ $ gendiff filepath1.json filepath2.json -f json
 ]
 ```
 ###### asciinema output json format
-[![asciicast](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS.svg)](https://asciinema.org/a/inHEOcggog4o8jdnayuWQJqVS)
+[![asciicast](https://asciinema.org/a/IK17dS05xYePtyaz9TZPDKMAV.svg)](https://asciinema.org/a/IK17dS05xYePtyaz9TZPDKMAV)
