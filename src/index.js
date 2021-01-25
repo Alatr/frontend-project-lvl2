@@ -3,7 +3,6 @@ import path from 'path';
 import parseFile from './parsers.js';
 import getFormat from './formatters/index.js';
 
-
 const predicates = {
   isDeleted: (key, obj) => !_.has(obj, key),
   isAdded: (key, obj) => !_.has(obj, key),
