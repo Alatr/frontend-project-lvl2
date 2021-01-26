@@ -47,13 +47,13 @@ Options:
 - json
 - yml
 
-###### example with different file extension
-[![asciicast](https://asciinema.org/a/6CKwxmigLMFHHqkCJkTZehvr0.svg)](https://asciinema.org/a/6CKwxmigLMFHHqkCJkTZehvr0)
-
 ```
 Example call:
   $ gendiff file.json file2.yml
 ```
+###### example with different file extension
+[![asciicast](https://asciinema.org/a/6CKwxmigLMFHHqkCJkTZehvr0.svg)](https://asciinema.org/a/6CKwxmigLMFHHqkCJkTZehvr0)
+
 
 ## Output format
 

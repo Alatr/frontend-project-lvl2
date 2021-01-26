@@ -16,7 +16,7 @@ export const addKeyMessage = (key, obj1, obj2, depth) => {
 export const deleteKeyMessage = (key, obj1, obj2, depth) => `Property '${depth}${key}' was removed`;
 /*  */
 /*  */
-export const unchangeKeyMessage = (key, val) => ((val.slice(0, 9) !== 'Property ') ? [] : val);
+export const unchangeKeyMessage = (key, val) => ((_.toString(val).slice(0, 9) !== 'Property ') ? [] : val);
 /*  */
 /*  */
 export const changeKeyMessage = (key, obj1, obj2, depth) => {
