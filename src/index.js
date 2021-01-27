@@ -1,5 +1,7 @@
 import _ from 'lodash';
 import path from 'path';
+import fs from 'fs';
+
 import parseFile from './parsers.js';
 import getFormat from './formatters/index.js';
 
@@ -14,9 +16,18 @@ const predicates = {
   isOneOfIsOdject: (key, obj1, obj2) => !_.isPlainObject(obj1[key]) || !_.isPlainObject(obj2[key]),
 };
 
+const readFile = (filePath) => fs.readFileSync(filePath, 'utf-8');
+
 export default (filePath1, filePath2, formaterType) => {
-  const file1Content = parseFile(path.resolve(process.cwd(), filePath1));
-  const file2Content = parseFile(path.resolve(process.cwd(), filePath2));
+  const absolutePathFile1 = path.resolve(process.cwd(), filePath1);
+  const absolutePathFile2 = path.resolve(process.cwd(), filePath2);
+
+  const contentFile1 = readFile(absolutePathFile1);
+  const contentFile2 = readFile(absolutePathFile2);
+
+  const dataFile1 = parseFile(contentFile1, path.extname(absolutePathFile1));
+  const dataFile2 = parseFile(contentFile2, path.extname(absolutePathFile2));
+
   const formater = getFormat(formaterType);
 
   const accumValue = formater.getAcc();
@@ -58,5 +69,5 @@ export default (filePath1, filePath2, formaterType) => {
     return formater.printResultMessage(flatenLines, acc);
   };
 
-  return iter(file1Content, file2Content, accumValue);
+  return iter(dataFile1, dataFile2, accumValue);
 };
