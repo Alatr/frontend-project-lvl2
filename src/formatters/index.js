@@ -1,9 +1,10 @@
 import _ from 'lodash';
-import * as stylish from './stylish.js';
-import * as plain from './plain.js';
-import * as json from './ast.js';
+import stylish from './stylish.js';
+/* import plain from './plain.js';
+import json from './ast.js'; */
 
-const formaters = { stylish, plain, json };
+const formaters = { stylish };
+// const formaters = { stylish, plain, json };
 
 export default function getFormat(formatName = 'stylish') {
   if (!_.has(formaters, formatName)) {

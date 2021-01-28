@@ -17,6 +17,51 @@ const predicates = {
 };
 
 const readFile = (filePath) => fs.readFileSync(filePath, 'utf-8');
+// gendiff __tests__/__fixtures__/file1.json __tests__/__fixtures__/file2.json
+const getDiff = (obj1, obj2) => {
+
+    const iter = (object1, object2, acc) => {
+      const keys = _.sortBy(_.union(_.keys(object1), _.keys(object2)));
+
+      const lines = keys.map((key) => {
+
+        if (predicates.isBothIsNotOdject(key, object1, object2)) {
+          if (predicates.isAdded(key, object1)) {
+            return { key, value: object2[key], status: 'added' };
+          }
+          if (predicates.isDeleted(key, object2)) {
+            return { key, value: object1[key], status: 'removed' };
+          }
+          if (predicates.isChanged(key, object1, object2)) {
+            return { key, value: object2[key], oldValue: object1[key], status: 'updated' };
+          }
+          return { key, value: object2[key], status: 'unchanged' };
+        }
+        
+        if (predicates.isAdded(key, object1)) {
+            return { key, value: object2[key], status: 'added' }
+            
+          }
+          if (predicates.isDeleted(key, object2)) {
+            return { key, value: object1[key], status: 'removed' }
+            
+          }
+          if (predicates.isOneOfIsOdject(key, object1, object2)) {
+            return { key, value: object2[key], oldValue: object1[key], status: 'updated' };
+            
+          }
+          const result = iter(object1[key], object2[key]);
+          return { key, value: 'complex', status: 'unchanged', children: [result]};
+        });
+        
+        // const flatenLines = lines.flatMap((line) => line);
+  
+      return lines;
+    };
+  
+    return iter(obj1, obj2);
+};
+
 
 export default (filePath1, filePath2, formaterType) => {
   const absolutePathFile1 = path.resolve(process.cwd(), filePath1);
@@ -30,44 +75,11 @@ export default (filePath1, filePath2, formaterType) => {
 
   const formater = getFormat(formaterType);
 
-  const accumValue = formater.getAcc();
+  const diff = getDiff(dataFile1, dataFile2);
 
-  const iter = (object1, object2, acc) => {
-    const keys = _.sortBy(_.union(_.keys(object1), _.keys(object2)));
+  return formater(diff);
 
-    const lines = keys.map((key) => {
-      /*  */
-      if (predicates.isBothIsNotOdject(key, object1, object2)) {
-        if (predicates.isAdded(key, object1)) {
-          return formater.addKeyMessage(key, object1, object2, acc);
-        }
-        if (predicates.isDeleted(key, object2)) {
-          return formater.deleteKeyMessage(key, object1, object2, acc);
-        }
-        if (predicates.isChanged(key, object1, object2)) {
-          return formater.changeKeyMessage(key, object1, object2, acc);
-        }
-        return formater.unchangeKeyMessage(key, object2[key], acc);
-      }
-      /*  */
+  /* 
 
-      if (predicates.isAdded(key, object1)) {
-        return formater.addKeyMessage(key, object1, object2, acc);
-      }
-      if (predicates.isDeleted(key, object2)) {
-        return formater.deleteKeyMessage(key, object1, object2, acc);
-      }
-      if (predicates.isOneOfIsOdject(key, object1, object2)) {
-        return formater.changeKeyMessage(key, object1, object2, acc);
-      }
-      const result = iter(object1[key], object2[key], formater.incrementAcc(acc, key));
-      return formater.unchangeKeyMessage(key, result, acc);
-    });
-
-    const flatenLines = lines.flatMap((line) => line);
-
-    return formater.printResultMessage(flatenLines, acc);
-  };
-
-  return iter(dataFile1, dataFile2, accumValue);
+  const accumValue = formater.getAcc(); */
 };
