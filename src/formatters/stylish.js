@@ -23,49 +23,50 @@ const stringifyJSON = (value, prevDepth = '', spacesCount = 2, replacer = '  ') 
   return iter(value, 1);
 };
 
-function getCurrentIndent(depth, spacesCount = 2, replacer = '  ') {
-  const indentSize = depth * spacesCount;
-  return replacer.repeat(indentSize - spacesCount);
-}
+const printFormatedResult = (value, indent) => ((_.isPlainObject(value))
+  ? stringifyJSON(value, indent)
+  : value);
 
 export default (tree) => {
-  const iter = (items, depth) => {
-    const indent = getCurrentIndent(depth);
-    const lines = items.map((object) => {
-      const value = (_.isPlainObject(object.value))
-        ? stringifyJSON(object.value, indent)
-        : object.value;
+  const spacesCount = 2;
 
-      switch (object.status) {
+  const iter = (nodes, depth) => {
+    const indentSize = depth * spacesCount;
+    const indent = '  '.repeat(indentSize - spacesCount);
+
+    const leafNodes = nodes.flatMap(({
+      status, key, children, value, oldValue,
+    }) => {
+      switch (status) {
         case 'added': {
-          return `  ${indent}+ ${object.key}: ${value}`;
+          return `  ${indent}+ ${key}: ${printFormatedResult(value, indent)}`;
         }
 
         case 'removed': {
-          return `  ${indent}- ${object.key}: ${value}`;
-        }
-
-        case 'updated': {
-          const oldValue = (_.isPlainObject(object.oldValue))
-            ? stringifyJSON(object.oldValue, indent)
-            : object.oldValue;
-          return [`  ${indent}- ${object.key}: ${oldValue}`, `  ${indent}+ ${object.key}: ${value}`];
+          return `  ${indent}- ${key}: ${printFormatedResult(value, indent)}`;
         }
 
         case 'unchanged': {
-          const isHasChildren = _.has(object, 'children');
-          return `  ${indent}  ${object.key}: ${isHasChildren ? iter(object.children, depth + 1) : value}`;
+          return `  ${indent}  ${key}: ${printFormatedResult(value, indent)}`;
+        }
+
+        case 'updated': {
+          return [`  ${indent}- ${key}: ${printFormatedResult(oldValue, indent)}`,
+            `  ${indent}+ ${key}: ${printFormatedResult(value, indent)}`];
+        }
+
+        case 'nested': {
+          return `  ${indent}  ${key}: ${iter(children, depth + 1)}`;
         }
 
         default:
-          throw new Error(`Unknown status change ${object.status}`);
+          throw new Error(`Unknown status change ${status}`);
       }
     });
-    const flatenLines = lines.flatMap((line) => line);
 
     return [
       '{',
-      ...flatenLines,
+      ...leafNodes,
       `${indent}}`,
     ].join('\n');
   };

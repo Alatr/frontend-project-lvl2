@@ -27,11 +27,10 @@ export default (tree) => {
           return `Property '${path}${object.key}' was updated. From ${createObjectLabel(oldValue)} to ${createObjectLabel(newValue)}`;
         }
 
+        case 'nested': {
+          return `${iter(object.children, `${path}${object.key}.`)}`;
+        }
         case 'unchanged': {
-          const isHasChildren = _.has(object, 'children');
-          if (isHasChildren) {
-            return `${iter(object.children, `${path}${object.key}.`)}`;
-          }
           return [];
         }
 

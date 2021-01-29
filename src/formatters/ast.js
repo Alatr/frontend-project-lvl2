@@ -76,17 +76,15 @@ export default (tree) => {
           };
         }
 
+        case 'nested': {
+          return {
+            name: object.key,
+            status: 'updated',
+            value: 'complex',
+            children: iter(object.children),
+          };
+        }
         case 'unchanged': {
-          const isHasChildren = _.has(object, 'children');
-
-          if (isHasChildren) {
-            return {
-              name: object.key,
-              status: 'updated',
-              value: 'complex',
-              children: iter(object.children),
-            };
-          }
           return {
             name: object.key,
             status: 'unchanged',
