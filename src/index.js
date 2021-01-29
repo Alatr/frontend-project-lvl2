@@ -17,7 +17,7 @@ const predicates = {
 };
 
 const readFile = (filePath) => fs.readFileSync(filePath, 'utf-8');
-// gendiff __tests__/__fixtures__/file1.json __tests__/__fixtures__/file2.json
+
 const getDiff = (obj1, obj2) => {
   const iter = (object1, object2) => {
     const keys = _.sortBy(_.union(_.keys(object1), _.keys(object2)));
@@ -55,8 +55,6 @@ const getDiff = (obj1, obj2) => {
       };
     });
 
-    // const flatenLines = lines.flatMap((line) => line);
-
     return lines;
   };
 
@@ -77,6 +75,5 @@ export default (filePath1, filePath2, formaterType) => {
 
   const diff = getDiff(dataFile1, dataFile2);
 
-  // return JSON.stringify(diff, null, 2);
   return formater(diff);
 };

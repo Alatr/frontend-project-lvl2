@@ -1,36 +1,46 @@
 import _ from 'lodash';
 
-function createObjectLabel(object, value, label = '[complex value]') {
-  return `${_.isPlainObject(object) ? label : value}`;
+function createObjectLabel(object, label = '[complex value]') {
+  return `${_.isPlainObject(object) ? label : object}`;
 }
 function createQuotesAroundString(object) {
   return (_.isString(object)) ? `'${object}'` : object;
 }
 
-export const addKeyMessage = (key, obj1, obj2, depth) => {
-  const value = createQuotesAroundString(obj2[key]);
-  return `Property '${depth}${key}' was added with value: ${createObjectLabel(obj2[key], value)}`;
+export default (tree) => {
+  const iter = (items, path) => {
+    const lines = items.map((object) => {
+      switch (object.status) {
+        case 'added': {
+          const value = createQuotesAroundString(object.value);
+          return `Property '${path}${object.key}' was added with value: ${createObjectLabel(value)}`;
+        }
+
+        case 'removed': {
+          return `Property '${path}${object.key}' was removed`;
+        }
+
+        case 'updated': {
+          const oldValue = createQuotesAroundString(object.oldValue);
+          const newValue = createQuotesAroundString(object.value);
+
+          return `Property '${path}${object.key}' was updated. From ${createObjectLabel(oldValue)} to ${createObjectLabel(newValue)}`;
+        }
+
+        case 'unchanged': {
+          const isHasChildren = _.has(object, 'children');
+          if (isHasChildren) {
+            return `${iter(object.children, `${path}${object.key}.`)}`;
+          }
+          return [];
+        }
+
+        default:
+          throw new Error(`Unknown status change ${object.status}`);
+      }
+    });
+    const flatenLines = lines.flatMap((line) => line);
+    return [...flatenLines].join('\n');
+  };
+  return iter(tree, '');
 };
-/*  */
-/*  */
-export const deleteKeyMessage = (key, obj1, obj2, depth) => `Property '${depth}${key}' was removed`;
-/*  */
-/*  */
-export const unchangeKeyMessage = (key, val) => ((_.toString(val).slice(0, 9) !== 'Property ') ? [] : val);
-/*  */
-/*  */
-export const changeKeyMessage = (key, obj1, obj2, depth) => {
-  const oldValue = createQuotesAroundString(obj1[key]);
-  const newValue = createQuotesAroundString(obj2[key]);
-
-  return `Property '${depth}${key}' was updated. From ${createObjectLabel(obj1[key], oldValue)} to ${createObjectLabel(obj2[key], newValue)}`;
-};
-/*  */
-/*  */
-
-/*  */
-export const printResultMessage = (lines) => [...lines].join('\n');
-export const getAcc = () => '';
-export const incrementAcc = (acc, val) => `${acc + val}.`;
-
-/*  */
