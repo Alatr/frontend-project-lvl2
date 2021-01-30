@@ -1,19 +1,19 @@
 import _ from 'lodash';
 
-function printFormatedResult(object, label = '[complex value]') {
-  if (_.isPlainObject(object)) return label;
+function printValue(object) {
+  if (_.isPlainObject(object) || _.isArray(object)) return '[complex value]';
 
   return (_.isString(object)) ? `'${object}'` : object;
 }
 
 export default (tree) => {
   const iter = (nodes, path) => {
-    const lines = nodes.map(({
+    const lines = nodes.flatMap(({
       status, key, children, value, oldValue,
     }) => {
       switch (status) {
         case 'added': {
-          return `Property '${path}${key}' was added with value: ${printFormatedResult(value)}`;
+          return `Property '${path}${key}' was added with value: ${printValue(value)}`;
         }
 
         case 'removed': {
@@ -21,7 +21,7 @@ export default (tree) => {
         }
 
         case 'updated': {
-          return `Property '${path}${key}' was updated. From ${printFormatedResult(oldValue)} to ${printFormatedResult(value)}`;
+          return `Property '${path}${key}' was updated. From ${printValue(oldValue)} to ${printValue(value)}`;
         }
 
         case 'nested': {
@@ -32,11 +32,10 @@ export default (tree) => {
         }
 
         default:
-          throw new Error(`Unknown status change ${status}`);
+          throw new Error(`Unknown status ${status}`);
       }
     });
-    const flatenLines = lines.flatMap((line) => line);
-    return [...flatenLines].join('\n');
+    return [...lines].join('\n');
   };
   return iter(tree, '');
 };

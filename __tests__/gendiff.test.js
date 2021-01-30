@@ -22,8 +22,11 @@ describe.each([
   test.each([
     ['file1.json', 'file2.json'],
     ['file1.yml', 'file2.yml'],
+    ['file1.yaml', 'file2.yaml'],
     ['file1.yml', 'file2.json'],
+    ['file1.yaml', 'file2.json'],
     ['file1.json', 'file2.yml'],
+    ['file1.json', 'file2.yaml'],
   ])('%s -> %s', (fileName1, fileName2) => {
     expect(gendiff(getFixturePath(fileName1), getFixturePath(fileName2), format))
       .toBe(expected);

@@ -1,13 +1,17 @@
-import _ from 'lodash';
 import stylish from './stylish.js';
 import plain from './plain.js';
-import json from './ast.js';
 
-const formaters = { stylish, plain, json };
+const json = (tree) => JSON.stringify(tree, null, '  ');
 
-export default function getFormat(formatName = 'stylish') {
-  if (!_.has(formaters, formatName)) {
-    throw new Error(`Unknown format: recived format name '${formatName}'.`);
+export default (diff, formatName = 'stylish') => {
+  switch (formatName) {
+    case 'stylish':
+      return stylish(diff);
+    case 'plain':
+      return plain(diff);
+    case 'json':
+      return json(diff);
+    default:
+      throw new Error(`Unknown format: recived format name '${formatName}'.`);
   }
-  return formaters[formatName];
-}
+};

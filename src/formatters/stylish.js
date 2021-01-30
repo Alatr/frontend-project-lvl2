@@ -1,30 +1,32 @@
 import _ from 'lodash';
 
-const stringifyJSON = (value, prevDepth = '', spacesCount = 2, replacer = '  ') => {
+const stringify = (value, prevDepth = 1) => {
   const iter = (currentValue, depth) => {
     if (!_.isPlainObject(currentValue)) {
       return currentValue;
     }
 
-    const indentSize = depth * spacesCount;
-    const currentIndent = replacer.repeat(indentSize);
-    const bracketIndent = replacer.repeat(indentSize - spacesCount);
+    const replacer = '  ';
+    const spacesCount = 2;
+    const indentSize = (depth) * spacesCount;
+    const currentIndent = replacer.repeat(indentSize + spacesCount);
+    const bracketIndent = replacer.repeat(indentSize);
     const lines = Object
       .entries(currentValue)
-      .map(([key, val]) => `    ${prevDepth}${currentIndent}${key}: ${iter(val, depth + 1)}`);
+      .map(([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`);
 
     return [
       '{',
       ...lines,
-      `${prevDepth}${bracketIndent}    }`,
+      `${bracketIndent}}`,
     ].join('\n');
   };
 
-  return iter(value, 1);
+  return iter(value, prevDepth);
 };
 
-const printFormatedResult = (value, indent) => ((_.isPlainObject(value))
-  ? stringifyJSON(value, indent)
+const printValue = (value, indent) => ((_.isPlainObject(value))
+  ? stringify(value, indent)
   : value);
 
 export default (tree) => {
@@ -41,20 +43,20 @@ export default (tree) => {
     }) => {
       switch (status) {
         case 'added': {
-          return `${currentIndent}+ ${key}: ${printFormatedResult(value, bracketIndent)}`;
+          return `${currentIndent}+ ${key}: ${printValue(value, depth)}`;
         }
 
         case 'removed': {
-          return `${currentIndent}- ${key}: ${printFormatedResult(value, bracketIndent)}`;
+          return `${currentIndent}- ${key}: ${printValue(value, depth)}`;
         }
 
         case 'unchanged': {
-          return `${currentIndent}  ${key}: ${printFormatedResult(value, bracketIndent)}`;
+          return `${currentIndent}  ${key}: ${printValue(value, depth)}`;
         }
 
         case 'updated': {
-          return [`${currentIndent}- ${key}: ${printFormatedResult(oldValue, bracketIndent)}`,
-            `${currentIndent}+ ${key}: ${printFormatedResult(value, bracketIndent)}`];
+          return [`${currentIndent}- ${key}: ${printValue(oldValue, depth)}`,
+            `${currentIndent}+ ${key}: ${printValue(value, depth)}`];
         }
 
         case 'nested': {
@@ -62,7 +64,7 @@ export default (tree) => {
         }
 
         default:
-          throw new Error(`Unknown status change ${status}`);
+          throw new Error(`Unknown status ${status}`);
       }
     });
 

@@ -6,6 +6,8 @@ export default (content, type) => {
       return JSON.parse(content);
     case 'yml':
       return yaml.load(content);
+    case 'yaml':
+      return yaml.load(content);
     default:
       throw new Error(`Unknown extension ${type}`);
   }
