@@ -1,72 +1,67 @@
 [
   {
-    "name": "common",
-    "status": "updated",
+    "key": "common",
     "value": "complex",
+    "status": "nested",
     "children": [
       {
-        "name": "follow",
+        "key": "follow",
         "value": false,
         "status": "added"
       },
       {
-        "name": "setting1",
-        "status": "unchanged",
-        "value": "Value 1"
+        "key": "setting1",
+        "value": "Value 1",
+        "status": "unchanged"
       },
       {
-        "name": "setting2",
+        "key": "setting2",
         "value": 200,
         "status": "removed"
       },
       {
-        "name": "setting3",
-        "status": "updated",
+        "key": "setting3",
         "value": null,
-        "oldValue": true
+        "oldValue": true,
+        "status": "updated"
       },
       {
-        "name": "setting4",
+        "key": "setting4",
         "value": "blah blah",
         "status": "added"
       },
       {
-        "name": "setting5",
-        "value": "complex",
-        "status": "added",
-        "children": [
-          {
-            "name": "key5",
-            "value": "value5",
-            "status": "added"
-          }
-        ]
+        "key": "setting5",
+        "value": {
+          "key5": "value5"
+        },
+        "status": "added"
       },
       {
-        "name": "setting6",
-        "status": "updated",
+        "key": "setting6",
         "value": "complex",
+        "status": "nested",
         "children": [
           {
-            "name": "doge",
-            "status": "updated",
+            "key": "doge",
             "value": "complex",
+            "status": "nested",
             "children": [
               {
-                "name": "wow",
-                "status": "updated",
+                "key": "wow",
                 "value": "so much",
-                "oldValue": ""
+                "oldValue": "",
+                "status": "updated"
               }
             ]
           },
           {
-            "name": "key",
-            "status": "unchanged",
-            "value": "value"
+            "key": "key",
+            "value": "value",
+            "status": "unchanged"
           },
           {
-            "name": "ops",
+            "key": "ops",
             "value": "vops",
             "status": "added"
           }
@@ -75,88 +70,51 @@
     ]
   },
   {
-    "name": "group1",
-    "status": "updated",
+    "key": "group1",
     "value": "complex",
+    "status": "nested",
     "children": [
       {
-        "name": "baz",
-        "status": "updated",
+        "key": "baz",
         "value": "bars",
-        "oldValue": "bas"
+        "oldValue": "bas",
+        "status": "updated"
       },
       {
-        "name": "foo",
-        "status": "unchanged",
-        "value": "bar"
+        "key": "foo",
+        "value": "bar",
+        "status": "unchanged"
       },
       {
-        "name": "nest",
-        "status": "updated",
+        "key": "nest",
         "value": "str",
-        "oldValue": [
-          {
-            "name": "key",
-            "value": "value",
-            "status": "removed"
-          }
-        ]
+        "oldValue": {
+          "key": "value"
+        },
+        "status": "updated"
       }
     ]
   },
   {
-    "name": "group2",
-    "value": "complex",
-    "status": "removed",
-    "children": [
-      {
-        "name": "abc",
-        "value": 12345,
-        "status": "removed"
-      },
-      {
-        "name": "deep",
-        "value": "complex",
-        "status": "removed",
-        "children": [
-          {
-            "name": "id",
-            "value": 45,
-            "status": "removed"
-          }
-        ]
+    "key": "group2",
+    "value": {
+      "abc": 12345,
+      "deep": {
+        "id": 45
       }
-    ]
+    },
+    "status": "removed"
   },
   {
-    "name": "group3",
-    "value": "complex",
-    "status": "added",
-    "children": [
-      {
-        "name": "fee",
-        "value": 100500,
-        "status": "added"
-      },
-      {
-        "name": "deep",
-        "value": "complex",
-        "status": "added",
-        "children": [
-          {
-            "name": "id",
-            "value": "complex",
-            "status": "added",
-            "children": [
-              {
-                "name": "number",
-                "value": 45,
-                "status": "added"
-              }
-            ]
-          }
-        ]
+    "key": "group3",
+    "value": {
+      "fee": 100500,
+      "deep": {
+        "id": {
+          "number": 45
+        }
       }
-    ]
+    },
+    "status": "added"
   }
 ]

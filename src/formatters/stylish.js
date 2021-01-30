@@ -29,34 +29,36 @@ const printFormatedResult = (value, indent) => ((_.isPlainObject(value))
 
 export default (tree) => {
   const spacesCount = 2;
+  const replacer = '  ';
 
   const iter = (nodes, depth) => {
     const indentSize = depth * spacesCount;
-    const indent = '  '.repeat(indentSize - spacesCount);
+    const currentIndent = replacer.repeat(indentSize - 1);
+    const bracketIndent = replacer.repeat(indentSize - spacesCount);
 
-    const leafNodes = nodes.flatMap(({
+    const lines = nodes.flatMap(({
       status, key, children, value, oldValue,
     }) => {
       switch (status) {
         case 'added': {
-          return `  ${indent}+ ${key}: ${printFormatedResult(value, indent)}`;
+          return `${currentIndent}+ ${key}: ${printFormatedResult(value, bracketIndent)}`;
         }
 
         case 'removed': {
-          return `  ${indent}- ${key}: ${printFormatedResult(value, indent)}`;
+          return `${currentIndent}- ${key}: ${printFormatedResult(value, bracketIndent)}`;
         }
 
         case 'unchanged': {
-          return `  ${indent}  ${key}: ${printFormatedResult(value, indent)}`;
+          return `${currentIndent}  ${key}: ${printFormatedResult(value, bracketIndent)}`;
         }
 
         case 'updated': {
-          return [`  ${indent}- ${key}: ${printFormatedResult(oldValue, indent)}`,
-            `  ${indent}+ ${key}: ${printFormatedResult(value, indent)}`];
+          return [`${currentIndent}- ${key}: ${printFormatedResult(oldValue, bracketIndent)}`,
+            `${currentIndent}+ ${key}: ${printFormatedResult(value, bracketIndent)}`];
         }
 
         case 'nested': {
-          return `  ${indent}  ${key}: ${iter(children, depth + 1)}`;
+          return `${currentIndent}  ${key}: ${iter(children, depth + 1)}`;
         }
 
         default:
@@ -66,8 +68,8 @@ export default (tree) => {
 
     return [
       '{',
-      ...leafNodes,
-      `${indent}}`,
+      ...lines,
+      `${bracketIndent}}`,
     ].join('\n');
   };
   return iter(tree, 1);

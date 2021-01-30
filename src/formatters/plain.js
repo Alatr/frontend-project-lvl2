@@ -1,41 +1,38 @@
 import _ from 'lodash';
 
-function createObjectLabel(object, label = '[complex value]') {
-  return `${_.isPlainObject(object) ? label : object}`;
-}
-function createQuotesAroundString(object) {
+function printFormatedResult(object, label = '[complex value]') {
+  if (_.isPlainObject(object)) return label;
+
   return (_.isString(object)) ? `'${object}'` : object;
 }
 
 export default (tree) => {
-  const iter = (items, path) => {
-    const lines = items.map((object) => {
-      switch (object.status) {
+  const iter = (nodes, path) => {
+    const lines = nodes.map(({
+      status, key, children, value, oldValue,
+    }) => {
+      switch (status) {
         case 'added': {
-          const value = createQuotesAroundString(object.value);
-          return `Property '${path}${object.key}' was added with value: ${createObjectLabel(value)}`;
+          return `Property '${path}${key}' was added with value: ${printFormatedResult(value)}`;
         }
 
         case 'removed': {
-          return `Property '${path}${object.key}' was removed`;
+          return `Property '${path}${key}' was removed`;
         }
 
         case 'updated': {
-          const oldValue = createQuotesAroundString(object.oldValue);
-          const newValue = createQuotesAroundString(object.value);
-
-          return `Property '${path}${object.key}' was updated. From ${createObjectLabel(oldValue)} to ${createObjectLabel(newValue)}`;
+          return `Property '${path}${key}' was updated. From ${printFormatedResult(oldValue)} to ${printFormatedResult(value)}`;
         }
 
         case 'nested': {
-          return `${iter(object.children, `${path}${object.key}.`)}`;
+          return `${iter(children, `${path}${key}.`)}`;
         }
         case 'unchanged': {
           return [];
         }
 
         default:
-          throw new Error(`Unknown status change ${object.status}`);
+          throw new Error(`Unknown status change ${status}`);
       }
     });
     const flatenLines = lines.flatMap((line) => line);
