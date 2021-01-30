@@ -10,7 +10,7 @@ const gendiff = (object1, object2) => {
 
     if (_.isPlainObject(object1[key]) && _.isPlainObject(object2[key])) {
       return {
-        key, value: 'complex', status: 'nested', children: gendiff(object1[key], object2[key]),
+        key, status: 'nested', children: gendiff(object1[key], object2[key]),
       };
     }
 

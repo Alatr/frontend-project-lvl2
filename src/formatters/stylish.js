@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
+const replacer = '  ';
+const spacesCount = 2;
 const stringify = (value, prevDepth = 1) => {
   const iter = (currentValue, depth) => {
     if (!_.isPlainObject(currentValue)) {
       return currentValue;
     }
 
-    const replacer = '  ';
-    const spacesCount = 2;
     const indentSize = (depth) * spacesCount;
     const currentIndent = replacer.repeat(indentSize + spacesCount);
     const bracketIndent = replacer.repeat(indentSize);
@@ -25,14 +25,11 @@ const stringify = (value, prevDepth = 1) => {
   return iter(value, prevDepth);
 };
 
-const printValue = (value, indent) => ((_.isPlainObject(value))
-  ? stringify(value, indent)
+const printValue = (value, depth) => ((_.isPlainObject(value))
+  ? stringify(value, depth)
   : value);
 
 export default (tree) => {
-  const spacesCount = 2;
-  const replacer = '  ';
-
   const iter = (nodes, depth) => {
     const indentSize = depth * spacesCount;
     const currentIndent = replacer.repeat(indentSize - 1);

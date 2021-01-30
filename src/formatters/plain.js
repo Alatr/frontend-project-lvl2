@@ -1,9 +1,9 @@
 import _ from 'lodash';
 
-function printValue(object) {
-  if (_.isPlainObject(object) || _.isArray(object)) return '[complex value]';
+function printValue(value) {
+  if (_.isObject(value)) return '[complex value]';
 
-  return (_.isString(object)) ? `'${object}'` : object;
+  return (_.isString(value)) ? `'${value}'` : value;
 }
 
 export default (tree) => {

@@ -1,7 +1,6 @@
 [
   {
     "key": "common",
-    "value": "complex",
     "status": "nested",
     "children": [
       {
@@ -39,12 +38,10 @@
       },
       {
         "key": "setting6",
-        "value": "complex",
         "status": "nested",
         "children": [
           {
             "key": "doge",
-            "value": "complex",
             "status": "nested",
             "children": [
               {
@@ -71,7 +68,6 @@
   },
   {
     "key": "group1",
-    "value": "complex",
     "status": "nested",
     "children": [
       {
