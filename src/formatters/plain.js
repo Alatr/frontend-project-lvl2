@@ -25,7 +25,7 @@ export default (tree) => {
         }
 
         case 'nested': {
-          return `${iter(children, `${path}${key}.`)}`;
+          return iter(children, `${path}${key}.`);
         }
         case 'unchanged': {
           return [];
@@ -35,7 +35,7 @@ export default (tree) => {
           throw new Error(`Unknown status ${status}`);
       }
     });
-    return [...lines].join('\n');
+    return lines.join('\n');
   };
   return iter(tree, '');
 };
